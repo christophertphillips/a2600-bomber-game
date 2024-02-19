@@ -234,6 +234,8 @@ LoopOverscan:
 ; Subroutines
 ;--------------------------------------------------------
 
+  org $FFAD         ; set at end of rom
+
 SetObjectXPos subroutine
   cpx #2            ; carry flag for ball/missile
   adc #0            ; add 1 to account for different timings
@@ -318,6 +320,7 @@ BomberColor:
     .byte #$32
     .byte #$32
     .byte #$0E
+    .byte #$40
     .byte #$40
     .byte #$40
     .byte #$40
