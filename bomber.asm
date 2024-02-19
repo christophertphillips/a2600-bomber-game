@@ -192,6 +192,13 @@ DrawSpriteP1:
 ; Input (in OVERSCAN)
 ;--------------------------------------------------------
 
+  lda #<JetSprite
+  sta JetSpritePtr
+  lda #>JetSprite
+  sta JetSpritePtr+1
+
+  sta WSYNC
+
 CheckP0Up:
   lda #$10
   bit SWCHA
@@ -210,19 +217,31 @@ CheckP0Left:
   bne CheckP0Right
   dec JetXPos
 
+  lda #<JetSpriteTurn
+  sta JetSpritePtr
+  lda #>JetSpriteTurn
+  sta JetSpritePtr+1
+
 CheckP0Right:
   lda #$80
   bit SWCHA
   bne NoInput
   inc JetXPos
 
+  lda #<JetSpriteTurn
+  sta JetSpritePtr
+  lda #>JetSpriteTurn
+  sta JetSpritePtr+1
+
 NoInput:
+
+  ; uses 1 scanline
 
 ;--------------------------------------------------------
 ; Overscan (Cont.)
 ;--------------------------------------------------------
 
-  ldx #30
+  ldx #29                     ; 30 - 1 = 29 scanlines
 LoopOverscan:
   dex
   sta WSYNC
