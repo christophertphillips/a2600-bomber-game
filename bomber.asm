@@ -188,6 +188,40 @@ DrawSpriteP1:
   lda #$02          ; turn on VBLANK
   sta VBLANK
 
+;--------------------------------------------------------
+; Input (in OVERSCAN)
+;--------------------------------------------------------
+
+CheckP0Up:
+  lda #$10
+  bit SWCHA
+  bne CheckP0Down
+  inc JetYPos
+
+CheckP0Down:
+  lda #$20
+  bit SWCHA
+  bne CheckP0Left
+  dec JetYPos
+
+CheckP0Left:
+  lda #$40
+  bit SWCHA
+  bne CheckP0Right
+  dec JetXPos
+
+CheckP0Right:
+  lda #$80
+  bit SWCHA
+  bne NoInput
+  inc JetXPos
+
+NoInput:
+
+;--------------------------------------------------------
+; Overscan (Cont.)
+;--------------------------------------------------------
+
   ldx #30
 LoopOverscan:
   dex
