@@ -189,9 +189,20 @@ DrawSpriteP1:
   sta VBLANK
 
 ;--------------------------------------------------------
-; Input (in OVERSCAN)
+; Housekeeping (in OVERSCAN)
 ;--------------------------------------------------------
 
+CheckBomberYPosition:
+  lda BomberYPos
+  cmp #247                    ; check if bomber if fully off-screen
+  bne DecrementBomberYPos     ; if so, directly decrement its y-position
+  lda #96                     ; else, reset its y-position at top of screen
+  sta BomberYPos
+
+DecrementBomberYPos:
+  dec BomberYPos
+
+ResetJetSprite:
   lda #<JetSprite
   sta JetSpritePtr
   lda #>JetSprite
