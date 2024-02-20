@@ -86,6 +86,9 @@ Start:
   lda #>BomberColor
   sta BomberColorPtr+1
 
+  lda #$05                    ; set double-wide size for bomber
+  sta NUSIZ1
+
 JET_HEIGHT = 9
 BOMBER_HEIGHT = 9
 
