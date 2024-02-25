@@ -23,6 +23,7 @@ JetSpritePtr    ds 2
 JetColorPtr     ds 2
 BomberSpritePtr ds 2
 BomberColorPtr  ds 2
+Random          ds 1
 
 ;--------------------------------------------------------
 ; Start of ROM
@@ -88,6 +89,9 @@ Start:
 
   lda #$05                    ; set double-wide size for bomber
   sta NUSIZ1
+
+  lda #$D4                    ; set random seed value
+  sta Random
 
 JET_HEIGHT = 9
 BOMBER_HEIGHT = 9
@@ -204,8 +208,15 @@ CheckBomberYPosition:
   bne DecrementBomberYPos     ; if so, directly decrement its y-position
   lda #96                     ; else, reset its y-position at top of screen
   sta BomberYPos
+  jsr LFSR                    ; also, reset its x-position with a random value
+  lsr                         ; divide random postion by 2
+  lsr                         ; divide random postion by 2
+  clc                         ; add an offset of 40
+  adc #40
+  sta BomberXPos
 
 DecrementBomberYPos:
+  sta WSYNC
   dec BomberYPos
 
 ResetJetSprite:
@@ -213,8 +224,6 @@ ResetJetSprite:
   sta JetSpritePtr
   lda #>JetSprite
   sta JetSpritePtr+1
-
-  sta WSYNC
 
 ; process input
 CheckP0Up:                    ; check joy = up
@@ -271,7 +280,22 @@ LoopOverscan:
 ; Subroutines
 ;--------------------------------------------------------
 
-  org $FFAD         ; set at end of rom
+  org $FF9B         ; set at end of rom
+
+  ; LFSR subroutine
+LFSR subroutine
+  lda Random
+  asl
+  eor Random
+  asl
+  eor Random
+  asl
+  asl
+  eor Random
+  asl
+  rol Random
+  lda Random
+  rts
 
 ; set horizontal postion subroutine
 SetObjectXPos subroutine
