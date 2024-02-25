@@ -149,36 +149,38 @@ LoopVBlank:
   ldx #95
 KernelLoop:
   
-  txa                         ; draw jet sprite
+  ; draw jet sprite
+  txa
   sec
-  sbc JetYPos
-  cmp JET_HEIGHT
-  bcc DrawSpriteP0
-  lda #0
+  sbc JetYPos                 ; subtract jet Y coord
+  cmp JET_HEIGHT              ; compare to jet height
+  bcc DrawSpriteP0            ; if result < jet height, draw with current index
+  lda #0                      ; else, else, set index to 0
 DrawSpriteP0:
   tay
-  lda (JetSpritePtr),Y
-  sta GRP0
-  lda (JetColorPtr),Y
-  sta COLUP0
+  lda (JetSpritePtr),Y        ; load bitmap data of given jet sprite
+  sta GRP0                    ; set player 0 line bitmap
+  lda (JetColorPtr),Y         ; load color data of given jet sprite
+  sta COLUP0                  ; set player 0 line color
   sta WSYNC
   
-  txa                         ; draw jet sprite
+  ; draw bomber sprite
+  txa
   sec
-  sbc BomberYPos
-  cmp BOMBER_HEIGHT
-  bcc DrawSpriteP1
-  lda #0
+  sbc BomberYPos              ; subtract bomber Y coord
+  cmp BOMBER_HEIGHT           ; compare to bomber height
+  bcc DrawSpriteP1            ; if result < bomber height, draw with current index
+  lda #0                      ; else, else, set table index to 0
 DrawSpriteP1:
   tay
-  lda (BomberSpritePtr),Y
-  sta GRP1
-  lda (BomberColorPtr),Y
-  sta COLUP1
+  lda (BomberSpritePtr),Y     ; load bitmap data of given bomber sprite
+  sta GRP1                    ; set player 1 line bitmap
+  lda (BomberColorPtr),Y      ; load color data of given bomber sprite
+  sta COLUP1                  ; set player 1 line color
   ;sta WSYNC
   
   dex
-  cpx #$ff
+  cpx #$ff                    ; determine if end of screen has been reached
   sta WSYNC                   ; (STA doesn't affect flags, so safe to use here)
   bne KernelLoop
 
@@ -195,6 +197,7 @@ DrawSpriteP1:
 ; Housekeeping (in OVERSCAN)
 ;--------------------------------------------------------
 
+; update bomber position
 CheckBomberYPosition:
   lda BomberYPos
   cmp #247                    ; check if bomber if fully off-screen
@@ -206,43 +209,44 @@ DecrementBomberYPos:
   dec BomberYPos
 
 ResetJetSprite:
-  lda #<JetSprite
+  lda #<JetSprite             ; set jet sprite pointer to 'normal/non-turning' sprite
   sta JetSpritePtr
   lda #>JetSprite
   sta JetSpritePtr+1
 
   sta WSYNC
 
-CheckP0Up:
+; process input
+CheckP0Up:                    ; check joy = up
   lda #$10
   bit SWCHA
-  bne CheckP0Down
-  inc JetYPos
+  bne CheckP0Down             ; if joy != up, skip
+  inc JetYPos                 ; else, increment JetYPos
 
-CheckP0Down:
+CheckP0Down:                  ; check joy = down
   lda #$20
   bit SWCHA
-  bne CheckP0Left
-  dec JetYPos
+  bne CheckP0Left             ; if joy != down, skip
+  dec JetYPos                 ; if down, increment JetYPos
 
-CheckP0Left:
+CheckP0Left:                  ; check joy = left
   lda #$40
   bit SWCHA
-  bne CheckP0Right
-  dec JetXPos
+  bne CheckP0Right            ; if joy != left, skip
+  dec JetXPos                 ; if left, decrement JetXPos
 
-  lda #<JetSpriteTurn
+  lda #<JetSpriteTurn         ; set jet sprite pointer to 'turning' sprite
   sta JetSpritePtr
   lda #>JetSpriteTurn
   sta JetSpritePtr+1
 
-CheckP0Right:
+CheckP0Right:                 ; check joy = right
   lda #$80
   bit SWCHA
-  bne NoInput
-  inc JetXPos
+  bne NoInput                 ; if joy != right, skip
+  inc JetXPos                 ; else, increment JetXPos
 
-  lda #<JetSpriteTurn
+  lda #<JetSpriteTurn         ; set jet sprite pointer to 'turning' sprite
   sta JetSpritePtr
   lda #>JetSpriteTurn
   sta JetSpritePtr+1
@@ -269,6 +273,7 @@ LoopOverscan:
 
   org $FFAD         ; set at end of rom
 
+; set horizontal postion subroutine
 SetObjectXPos subroutine
   cpx #2            ; carry flag for ball/missile
   adc #0            ; add 1 to account for different timings
