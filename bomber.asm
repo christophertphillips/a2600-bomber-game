@@ -160,6 +160,9 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
   sta WSYNC
   bne ScoreBoardLoop
 
+  lda #$84                    ; set background color
+  sta COLUBK
+
   lda #$F0                    ; set plafield blocks
   sta PF0
   lda #$FC
@@ -276,13 +279,31 @@ CheckP0Right:                 ; check joy = right
 
 NoInput:
 
-  ; uses 1 scanline
+  sta WSYNC
+
+; check collisions
+CheckP0P1Collision:           ; check if jet and bomber have collided
+  lda #$80
+  bit CXPPMM
+  beq CheckP0PFCollision      ; if no, skip
+  jsr GameOver                ; else, call game over subroutine
+
+CheckP0PFCollision:           ; check if jet and playfield have collided
+  lda #$80
+  bit CXP0FB
+  beq NoCollision             ; if no, skip
+  jsr GameOver                ; else, call game over subroutine
+
+NoCollision:
+  sta CXCLR                   ; clear all collision registers
+
+  ; uses 2 scanline
 
 ;--------------------------------------------------------
 ; Overscan (Cont.)
 ;--------------------------------------------------------
 
-  ldx #29                     ; 30 - 1 = 29 scanlines
+  ldx #28                     ; 30 - 2 = 28 scanlines
 LoopOverscan:
   dex
   sta WSYNC
@@ -294,7 +315,13 @@ LoopOverscan:
 ; Subroutines
 ;--------------------------------------------------------
 
-  org $FF9B         ; set at end of rom
+  org $FF96                   ; set at end of rom
+
+  ; game over subroutine
+GameOver subroutine
+  lda #$40
+  sta COLUBK
+  rts
 
   ; LFSR subroutine
 LFSR subroutine
