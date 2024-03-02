@@ -57,11 +57,7 @@ Start:
   lda #$C2                    ; set playfield color
   sta COLUPF
 
-  lda #$F0                    ; set plafield blocks
-  sta PF0
-  lda #$FC
-  sta PF1
-  lda #$00
+  lda #$00                    ; set plafield blocks
   sta PF2
 
   lda #$01                    ; mirror playfield
@@ -150,7 +146,25 @@ LoopVBlank:
 ; Kernel
 ;--------------------------------------------------------
 
-  ldx #95
+  ldx #95                     
+ScoreBoardLoop:               ; add 20 scanlines space for scoreboard 
+  lda #0
+  sta GRP0                    ; disable sprites
+  sta GRP1
+  sta PF0                     ; disable playfield
+  sta PF1
+  sta PF2
+  dex
+  cpx #85                     ; have 10 * 2 = 20 scanlines been processed?
+  sta WSYNC
+  sta WSYNC
+  bne ScoreBoardLoop
+
+  lda #$F0                    ; set plafield blocks
+  sta PF0
+  lda #$FC
+  sta PF1
+
 KernelLoop:
   
   ; draw jet sprite
@@ -206,7 +220,7 @@ CheckBomberYPosition:
   lda BomberYPos
   cmp #247                    ; check if bomber if fully off-screen
   bne DecrementBomberYPos     ; if so, directly decrement its y-position
-  lda #96                     ; else, reset its y-position at top of screen
+  lda #85                     ; else, reset its y-position at top of screen (accounting for scoreboard)
   sta BomberYPos
   jsr LFSR                    ; also, reset its x-position with a random value
   lsr                         ; divide random postion by 2
