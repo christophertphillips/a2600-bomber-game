@@ -100,19 +100,6 @@ Start:
   lda #$D4                    ; set random seed value
   sta Random
 
-  ; 16
-  lda #5  ; 1 * NUMBER_HEIGHT
-  sta TensDigitOffset
-
-  lda #30 ; 6 * NUMBER_HEIGHT
-  sta OnesDigitOffset
-
-  lda #20 ; 4 * NUMBER_HEIGHT
-  sta TensDigitOffset+1
-
-  lda #45 ; 9 * NUMBER_HEIGHT
-  sta OnesDigitOffset+1
-
 JET_HEIGHT = 9
 BOMBER_HEIGHT = 9
 NUMBER_HEIGHT = 5
@@ -160,6 +147,19 @@ NextFrame:
   sta PF1
   sta PF2
   sta CTRLPF                  ; repeat playfield (since score/timer must be asymmetric)
+
+  ; test digits
+  lda #5  ; 1 * NUMBER_HEIGHT
+  sta TensDigitOffset
+
+  lda #30 ; 6 * NUMBER_HEIGHT
+  sta OnesDigitOffset
+
+  lda #20 ; 4 * NUMBER_HEIGHT
+  sta TensDigitOffset+1
+
+  lda #45 ; 9 * NUMBER_HEIGHT
+  sta OnesDigitOffset+1
 
   ; uses 5 scanlines
 
