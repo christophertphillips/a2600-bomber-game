@@ -15,14 +15,28 @@
   seg.u variables
   org $80
 
+; sprite positions
 JetXPos         ds 1
 JetYPos         ds 1
 BomberXPos      ds 1
 BomberYPos      ds 1
+
+; sprite graphics
 JetSpritePtr    ds 2
 JetColorPtr     ds 2
 BomberSpritePtr ds 2
 BomberColorPtr  ds 2
+
+; score/timer
+Score ds 1
+Timer ds 1
+ScoreSprite ds 1
+TimerSprite ds 1
+OnesDigitOffset ds 2
+TensDigitOffset ds 2
+DigitHelperByte ds 1
+
+; misc
 Random          ds 1
 
 ;--------------------------------------------------------
