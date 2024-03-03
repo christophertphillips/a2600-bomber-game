@@ -220,7 +220,12 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
   lda ScoreSprite
   sta PF1                     ; display score digit (second scanline)
 
-  sleep 29                    ; delay to ensure timer digits are drawn
+  inc TensDigitOffset
+  inc TensDigitOffset+1
+  inc OnesDigitOffset
+  inc OnesDigitOffset+1
+
+  sleep 9                    ; delay to ensure timer digits are drawn
 
   lda TimerSprite
   dex
