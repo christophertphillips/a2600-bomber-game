@@ -180,7 +180,7 @@ LoopVBlank:
 ; Kernel
 ;--------------------------------------------------------
 
-  ldx #10                     ; scanline 95
+  ldx #5                     ; scanline 95
 ScoreBoardLoop:               ; add 20 scanlines space for scoreboard 
 
   ldy TensDigitOffset         ; load tens digit for score
@@ -249,7 +249,7 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
   lda #$FC
   sta PF1
 
-  ldx #84                     ; scanline 84
+  ldx #89                     ; scanline 89
 KernelLoop:
   
   ; draw jet sprite
@@ -305,7 +305,7 @@ CheckBomberYPosition:
   lda BomberYPos
   cmp #247                    ; check if bomber if fully off-screen
   bne DecrementBomberYPos     ; if so, directly decrement its y-position
-  lda #84                     ; else, reset its y-position at top of screen (accounting for scoreboard)
+  lda #89                     ; else, reset its y-position at top of screen (accounting for scoreboard)
   sta BomberYPos
   jsr LFSR                    ; also, reset its x-position with a random value
   lsr                         ; divide random postion by 2
