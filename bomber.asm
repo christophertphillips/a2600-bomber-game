@@ -100,8 +100,22 @@ Start:
   lda #$D4                    ; set random seed value
   sta Random
 
+  ; 16
+  lda #5  ; 1 * NUMBER_HEIGHT
+  sta TensDigitOffset
+
+  lda #30 ; 6 * NUMBER_HEIGHT
+  sta OnesDigitOffset
+
+  lda #20 ; 4 * NUMBER_HEIGHT
+  sta TensDigitOffset+1
+
+  lda #45 ; 9 * NUMBER_HEIGHT
+  sta OnesDigitOffset+1
+
 JET_HEIGHT = 9
 BOMBER_HEIGHT = 9
+NUMBER_HEIGHT = 5
 
 ;--------------------------------------------------------
 ; Start next frame
@@ -168,12 +182,42 @@ LoopVBlank:
 
   ldx #95                     
 ScoreBoardLoop:               ; add 20 scanlines space for scoreboard 
+  
+
+  
+  ldy TensDigitOffset         ; load tens digit for score
+  lda Digits,Y
+  and #$F0  ;$10
+  sta ScoreSprite
+  
+  ldy OnesDigitOffset         ; load ones digit for score
+  lda Digits,Y
+  and #$0F  ;$07
+  ora ScoreSprite
+  sta ScoreSprite ; 17
+
+
+
+  ldy TensDigitOffset+1       ; load tens digit for timer
+  lda Digits,Y
+  and #$F0  ;$50
+  sta TimerSprite
+
+  ldy OnesDigitOffset+1       ; load tens digit for timer
+  lda Digits,Y
+  and #$0F  ;$07
+  ora TimerSprite
+  sta TimerSprite ;57
+  
+
+
   dex
   cpx #85                     ; have 10 * 2 = 20 scanlines been processed?
   sta WSYNC
   sta WSYNC
   bne ScoreBoardLoop
 
+  ; set background color, playfield prior to game loop
   lda #$84                    ; set background color
   sta COLUBK
 
