@@ -217,6 +217,11 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
   sta WSYNC
   bne ScoreBoardLoop
 
+  ; add extra 1 * 2 = 2 scanlines to do a "carriage return" before continuing
+  dex
+  sta WSYNC
+  sta WSYNC
+
   ; set background color, playfield prior to game loop
   lda #$84                    ; set background color
   sta COLUBK
@@ -284,7 +289,7 @@ CheckBomberYPosition:
   lda BomberYPos
   cmp #247                    ; check if bomber if fully off-screen
   bne DecrementBomberYPos     ; if so, directly decrement its y-position
-  lda #85                     ; else, reset its y-position at top of screen (accounting for scoreboard)
+  lda #84                     ; else, reset its y-position at top of screen (accounting for scoreboard)
   sta BomberYPos
   jsr LFSR                    ; also, reset its x-position with a random value
   lsr                         ; divide random postion by 2
