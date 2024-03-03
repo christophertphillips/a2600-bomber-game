@@ -180,7 +180,7 @@ LoopVBlank:
 ; Kernel
 ;--------------------------------------------------------
 
-  ldx #95                     
+  ldx #10                     ; scanline 95
 ScoreBoardLoop:               ; add 20 scanlines space for scoreboard 
   
 
@@ -212,12 +212,11 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
 
 
   dex
-  cpx #85                     ; have 10 * 2 = 20 scanlines been processed?
   sta WSYNC
   sta WSYNC
   bne ScoreBoardLoop
 
-  ; add extra 1 * 2 = 2 scanlines to do a "carriage return" before continuing
+  ; at scaline 85, add extra 1 * 2 = 2 scanlines to do a "carriage return" before continuing
   dex
   sta WSYNC
   sta WSYNC
@@ -234,6 +233,7 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
   lda #$FC
   sta PF1
 
+  ldx #84                     ; scanline 84
 KernelLoop:
   
   ; draw jet sprite
