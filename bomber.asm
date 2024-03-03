@@ -182,9 +182,7 @@ LoopVBlank:
 
   ldx #10                     ; scanline 95
 ScoreBoardLoop:               ; add 20 scanlines space for scoreboard 
-  
 
-  
   ldy TensDigitOffset         ; load tens digit for score
   lda Digits,Y
   and #$F0  ;$10
@@ -196,7 +194,10 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
   ora ScoreSprite
   sta ScoreSprite ; 17
 
-
+  sta WSYNC
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  
+  sta PF1                     ; display score digit (first scanline)
 
   ldy TensDigitOffset+1       ; load tens digit for timer
   lda Digits,Y
@@ -209,16 +210,31 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
   ora TimerSprite
   sta TimerSprite ;57
   
+  SLEEP 10                    ; delay to ensure timer digits are drawn
 
+  sta PF1                     ; display timer digit (first scanline)
 
+  sta WSYNC
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  lda ScoreSprite
+  sta PF1                     ; display score digit (second scanline)
+
+  sleep 29                    ; delay to ensure timer digits are drawn
+
+  lda TimerSprite
   dex
-  sta WSYNC
-  sta WSYNC
+  sta PF1                     ; display timer digit (second scanline)
+
   bne ScoreBoardLoop
 
   ; at scaline 85, add extra 1 * 2 = 2 scanlines to do a "carriage return" before continuing
   dex
   sta WSYNC
+
+  lda #$00                    ; clear PF1 of digits
+  sta PF1
+
   sta WSYNC
 
   ; set background color, playfield prior to game loop
