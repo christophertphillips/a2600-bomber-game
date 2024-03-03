@@ -138,14 +138,16 @@ NextFrame:
   sta WSYNC         ; 'carriage return'
   sta HMOVE         ; perform fine-tune offset
 
-  ; uses 5 scanlines
-
-  ; load score/timer digits
-  lda #$00                    ; repeat playfield (since score/timer must be asymmetric)
-  sta CTRLPF
-
-  lda #$99                    ; placeholder digit code
+  ; reset graphics, playfield, playfield reflection
+  lda #0
+  sta GRP0                    ; disable sprites
+  sta GRP1
+  sta PF0                     ; disable playfield
   sta PF1
+  sta PF2
+  sta CTRLPF                  ; repeat playfield (since score/timer must be asymmetric)
+
+  ; uses 5 scanlines
 
 ;--------------------------------------------------------
 ; VBLANK
@@ -166,11 +168,6 @@ LoopVBlank:
 
   ldx #95                     
 ScoreBoardLoop:               ; add 20 scanlines space for scoreboard 
-  lda #0
-  sta GRP0                    ; disable sprites
-  sta GRP1
-  sta PF0                     ; disable playfield
-  sta PF2
   dex
   cpx #85                     ; have 10 * 2 = 20 scanlines been processed?
   sta WSYNC
