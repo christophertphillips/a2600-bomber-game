@@ -60,9 +60,6 @@ Start:
   lda #$00                    ; set plafield blocks
   sta PF2
 
-  lda #$01                    ; mirror playfield
-  sta CTRLPF
-
   lda #<JetSprite             ; store jet sprite address
   sta JetSpritePtr
   lda #>JetSprite
@@ -129,6 +126,13 @@ NextFrame:
 
   ; uses 5 scanlines
 
+  ; load score/timer digits
+  lda #$00                    ; repeat playfield (since score/timer must be asymmetric)
+  sta CTRLPF
+
+  lda #$99                    ; placeholder digit code
+  sta PF1
+
 ;--------------------------------------------------------
 ; VBLANK
 ;--------------------------------------------------------
@@ -152,7 +156,6 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
   sta GRP0                    ; disable sprites
   sta GRP1
   sta PF0                     ; disable playfield
-  sta PF1
   sta PF2
   dex
   cpx #85                     ; have 10 * 2 = 20 scanlines been processed?
@@ -162,6 +165,9 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
 
   lda #$84                    ; set background color
   sta COLUBK
+
+  lda #$01                    ; mirror playfield (since 'land' must be symmetric)
+  sta CTRLPF
 
   lda #$F0                    ; set plafield blocks
   sta PF0
