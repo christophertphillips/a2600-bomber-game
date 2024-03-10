@@ -127,40 +127,40 @@ NextFrame:
   sta WSYNC;------------------
   sta WSYNC;------------------
 
-  lda #$00
-  sta VSYNC         ; turn off VSYNC
+  lda #$00                    ;  2   00
+  sta VSYNC                   ;  3   02 turn off VSYNC
 
 ;--------------------------------------------------------
 ; Housekeeping (in VBLANK)
 ;--------------------------------------------------------
 
   ; set jet horizontal position
-  lda JetXPos                 ; load GRP0 position from memory
-  ldx #0                      ; indicate GRP0
-  jsr SetObjectXPos           ; call subroutine to set GRP0 horizontal position
+  lda JetXPos                 ;  3   05   load GRP0 position from memory
+  ldx #0                      ;  2   08   indicate GRP0
+  jsr SetObjectXPos           ;  6   10   call subroutine to set GRP0 horizontal position
 
   ; set bomber horizontal position
-  lda BomberXPos              ; load GRP1 position from memory
-  ldx #1                      ; indicate GRP1
-  jsr SetObjectXPos           ; call subroutine to set GRP! horizontal position
+  lda BomberXPos              ;  3   06*  load GRP1 position from memory
+  ldx #1                      ;  2   09   indicate GRP1
+  jsr SetObjectXPos           ;  6   11   call subroutine to set GRP1 horizontal position
 
   ; perform fine-tune horizontal offsets
-  sta WSYNC;------------------; 'carriage return' before HMOVE
-  sta HMOVE                   ; perform fine-tune offset
+  sta WSYNC;------------------;  3   06*  'carriage return' before HMOVE
+  sta HMOVE                   ;  3   00   perform fine-tune offset
 
   ; reset graphics, playfield, playfield reflection
-  lda #0
-  sta GRP0                    ; disable sprites
-  sta GRP1
-  sta PF0                     ; disable playfield
-  sta PF1
-  sta PF2
-  sta CTRLPF                  ; repeat playfield (since score/timer must be asymmetric)
+  lda #0                      ;  2   03
+  sta GRP0                    ;  3   05   disable sprites
+  sta GRP1                    ;  3   08 
+  sta PF0                     ;  3   11   disable playfield
+  sta PF1                     ;  3   14
+  sta PF2                     ;  3   17
+  sta CTRLPF                  ;  3   20   repeat playfield (since score/timer must be asymmetric)
 
   ; calculate score offsets
-  sta WSYNC;------------------
-  jsr GetScoreOffsets         ; spans a scanline
-  sta WSYNC;------------------
+  sta WSYNC;------------------;  3   23
+  jsr GetScoreOffsets         ;  6   00   (spans a scanline)
+  sta WSYNC;------------------;  3   00
 
   ; uses 8 scanlines
 
