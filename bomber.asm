@@ -237,64 +237,64 @@ ScoreBoardLoop:               ;   (-37)   add 20 scanlines space for scoreboard
 
 
   ; clear scoreboard
-  lda #$00                    ; clear PF1 of digits
-  sta PF1
+  lda #$00                    ;  2   00   clear PF1 of digits
+  sta PF1                     ;  3   02
 
-  sta WSYNC;------------------; draw a "buffer line" btween scoreboard and gameplay area
+  sta WSYNC;------------------;  3   05   draw a "buffer line" btween scoreboard and gameplay area
 
 
   
   ; configure background color, playfield
-  lda #$84                    ; set background color
-  sta COLUBK
+  lda #$84                    ;  2   00   set background color
+  sta COLUBK                  ;  3   02
 
-  lda #$01                    ; mirror playfield (since 'land' must be symmetric)
-  sta CTRLPF
+  lda #$01                    ;  2   05 mirror playfield (since 'land' must be symmetric)
+  sta CTRLPF                  ;  3   07
 
-  lda #$F0                    ; set plafield blocks
-  sta PF0
-  lda #$FC
-  sta PF1
+  lda #$F0                    ;  2   10 set plafield blocks
+  sta PF0                     ;  3   12
+  lda #$FC                    ;  2   15
+  sta PF1                     ;  3   17
 
 
 
   ; draw gameplay area
-  ldx #89                     ; scanline 89
-KernelLoop:
+  ldx #89                     ;  2   20 scanline 89
+KernelLoop:                   ;           (+19 if first iteration)
   ; draw jet sprite
-  txa
-  sec
-  sbc JetYPos                 ; subtract jet Y coord
-  cmp JET_HEIGHT              ; compare to jet height
-  bcc DrawSpriteP0            ; if result < jet height, draw with current index
-  lda #0                      ; else, else, set index to 0
-DrawSpriteP0:
-  tay
-  lda (JetSpritePtr),Y        ; load bitmap data of given jet sprite
-  sta GRP0                    ; set player 0 line bitmap
-  lda (JetColorPtr),Y         ; load color data of given jet sprite
-  sta COLUP0                  ; set player 0 line color
-  sta WSYNC;------------------
+  txa                         ;  2   03
+  sec                         ;  2   05
+  sbc JetYPos                 ;  3   07   subtract jet Y coord
+  cmp JET_HEIGHT              ;  3   10   compare to jet height
+  bcc DrawSpriteP0            ;3/2   13   if result < jet height, draw with current index
+  lda #0                      ;  2   15   else, else, set index to 0
+DrawSpriteP0:                 ;           (-1 if jumped to)
+  tay                         ;  2   17
+  lda (JetSpritePtr),Y        ;  5   19   load bitmap data of given jet sprite
+  sta GRP0                    ;  3   24   set player 0 line bitmap
+  lda (JetColorPtr),Y         ;  5   27   load color data of given jet sprite
+  sta COLUP0                  ;  3   32   set player 0 line color
+  sta WSYNC;------------------;  3   35
   
   ; draw bomber sprite
-  txa
-  sec
-  sbc BomberYPos              ; subtract bomber Y coord
-  cmp BOMBER_HEIGHT           ; compare to bomber height
-  bcc DrawSpriteP1            ; if result < bomber height, draw with current index
-  lda #0                      ; else, else, set table index to 0
-DrawSpriteP1:
-  tay
-  lda (BomberSpritePtr),Y     ; load bitmap data of given bomber sprite
-  sta GRP1                    ; set player 1 line bitmap
-  lda (BomberColorPtr),Y      ; load color data of given bomber sprite
-  sta COLUP1                  ; set player 1 line color
+  txa                         ;  2   00
+  sec                         ;  2   02
+  sbc BomberYPos              ;  3   04   subtract bomber Y coord
+  cmp BOMBER_HEIGHT           ;  3   07   compare to bomber height
+  bcc DrawSpriteP1            ;3/2   10   if result < bomber height, draw with current index
+  lda #0                      ;  2   12   else, else, set table index to 0
+DrawSpriteP1:                 ;           (-1 if jumped to)
+  tay                         ;  2   14
+  lda (BomberSpritePtr),Y     ;  5   16   load bitmap data of given bomber sprite
+  sta GRP1                    ;  3   21   set player 1 line bitmap
+  lda (BomberColorPtr),Y      ;  5   24   load color data of given bomber sprite
+  sta COLUP1                  ;  3   29   set player 1 line color
   ;sta WSYNC
   
-  dex
-  cpx #$ff                    ; determine if end of screen has been reached
-  sta WSYNC;------------------; (STA doesn't affect flags, so safe to use here)
-  bne KernelLoop
+  dex                         ;  2   32
+  cpx #$ff                    ;  2   34   determine if end of screen has been reached
+  sta WSYNC;------------------;  3   36   (STA doesn't affect flags, so safe to use here)
+  bne KernelLoop              ;  3   00
 
 
 
