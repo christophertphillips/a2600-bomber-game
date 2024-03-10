@@ -123,9 +123,9 @@ NextFrame:
 ; VSYNC
 ;--------------------------------------------------------
 
-  sta WSYNC
-  sta WSYNC
-  sta WSYNC
+  sta WSYNC;------------------
+  sta WSYNC;------------------
+  sta WSYNC;------------------
 
   lda #$00
   sta VSYNC         ; turn off VSYNC
@@ -145,7 +145,7 @@ NextFrame:
   jsr SetObjectXPos           ; call subroutine to set GRP! horizontal position
 
   ; perform fine-tune horizontal offsets
-  sta WSYNC                   ; 'carriage return' before HMOVE
+  sta WSYNC;------------------; 'carriage return' before HMOVE
   sta HMOVE                   ; perform fine-tune offset
 
   ; reset graphics, playfield, playfield reflection
@@ -158,9 +158,9 @@ NextFrame:
   sta CTRLPF                  ; repeat playfield (since score/timer must be asymmetric)
 
   ; calculate score offsets
-  sta WSYNC
+  sta WSYNC;------------------
   jsr GetScoreOffsets         ; spans a scanline
-  sta WSYNC
+  sta WSYNC;------------------
 
   ; uses 8 scanlines
 
@@ -171,7 +171,7 @@ NextFrame:
   ldx #29
 LoopVBlank:
   dex
-  sta WSYNC
+  sta WSYNC;------------------
   bne LoopVBlank
 
   lda #$0
@@ -196,8 +196,7 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
   ora ScoreSprite             ; merge it with the tens digit pattern in RAM
   sta ScoreSprite             ; save the Score (tens + ones) digit pattern into RAM
 
-  sta WSYNC                   ; 'carriage return' to give enough time to draw score to left side of screen
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  sta WSYNC;------------------; 'carriage return' to give enough time to draw score to left side of screen
   
   sta PF1                     ; draw score digits (first scanline)
 
@@ -216,8 +215,7 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
 
   sta PF1                     ; draw timer digits (first scanline)
 
-  sta WSYNC                   ; 'carriage return' to give enough time to draw score to left side of screen
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  sta WSYNC;------------------; 'carriage return' to give enough time to draw score to left side of screen
 
   lda ScoreSprite             ; load score digits
   sta PF1                     ; display score digits (second scanline)
@@ -237,12 +235,12 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
 
   ; at scaline 85, add extra 1 * 2 = 2 scanlines to do a "carriage return" before continuing
   dex
-  sta WSYNC
+  sta WSYNC;------------------
 
   lda #$00                    ; clear PF1 of digits
   sta PF1
 
-  sta WSYNC
+  sta WSYNC;------------------
 
   ; set background color, playfield prior to game loop
   lda #$84                    ; set background color
@@ -272,7 +270,8 @@ DrawSpriteP0:
   sta GRP0                    ; set player 0 line bitmap
   lda (JetColorPtr),Y         ; load color data of given jet sprite
   sta COLUP0                  ; set player 0 line color
-  sta WSYNC
+  sta WSYNC;------------------
+  
   
   ; draw bomber sprite
   txa
@@ -291,7 +290,7 @@ DrawSpriteP1:
   
   dex
   cpx #$ff                    ; determine if end of screen has been reached
-  sta WSYNC                   ; (STA doesn't affect flags, so safe to use here)
+  sta WSYNC;------------------; (STA doesn't affect flags, so safe to use here)
   bne KernelLoop
 
 
@@ -322,7 +321,7 @@ CheckBomberYPosition:
   sta BomberXPos
 
 DecrementBomberYPos:
-  sta WSYNC
+  sta WSYNC;------------------
   dec BomberYPos
 
 ResetJetSprite:
@@ -368,7 +367,7 @@ CheckP0Right:                 ; check joy = right
 
 NoInput:
 
-  sta WSYNC
+  sta WSYNC;------------------
 
 ; check collisions
 CheckP0P1Collision:           ; check if jet and bomber have collided
@@ -395,7 +394,7 @@ NoCollision:
   ldx #28                     ; 30 - 2 = 28 scanlines
 LoopOverscan:
   dex
-  sta WSYNC
+  sta WSYNC;------------------
   bne LoopOverscan
 
   jmp NextFrame
@@ -456,10 +455,10 @@ LFSR subroutine
 
 ; set horizontal postion subroutine
 SetObjectXPos subroutine
-  cpx #2            ; carry flag for ball/missile
-  adc #0            ; add 1 to account for different timings
-  sec               ; set carry
-  sta WSYNC         ; 'carriage return'
+  cpx #2                      ; carry flag for ball/missile
+  adc #0                      ; add 1 to account for different timings
+  sec                         ; set carry
+  sta WSYNC;------------------; 'carriage return'
 
 .DivideLoop
   sbc #15
@@ -472,7 +471,7 @@ SetObjectXPos subroutine
   asl
   sta.a HMP0,X  ; force absolute addressing for timing!
   sta RESP0,X
-  sta WSYNC
+  sta WSYNC;------------------
   rts
 
 ;--------------------------------------------------------
