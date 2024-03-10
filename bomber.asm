@@ -402,7 +402,34 @@ LoopOverscan:
 ; Subroutines
 ;--------------------------------------------------------
 
-  org $FF46                   ; set at end of rom
+  org $FF24                   ; set at end of rom
+
+GetScoreOffsets subroutine
+  ldx #1
+.GetScoreOffsetsLoop
+  lda Score,X                 ; load A with Timer (x=1) or Score (x=0)
+  and #$0F                    ; remove the tens digit
+  sta DigitHelperByte         ; save the value of A into Temp
+  asl                         ; shift left (N*2)
+  asl                         ; shift left (N*4)
+  clc
+  adc DigitHelperByte         ; add the value saved in Temp (+N, thus 2N + 2N + N = 5N)
+  sta OnesDigitOffset,X       ; save A in OnesDigitOffset+1 or OnesDigitOffset
+
+  lda Score,X                 ; load A with Timer (x=1) or Score (x=0)
+  and #$F0                    ; remove the ones digit
+  lsr                         ; shift right (N/2)
+  lsr                         ; shift right (N/4)
+  sta DigitHelperByte         ; save the value of A into Temp
+  lsr                         ; shift right (N/8)
+  lsr                         ; shift right (N/16)
+  clc
+  adc DigitHelperByte         ; add the value saved in Temp (+N/4, thus N/4 + N/16 = 5N/16)
+  sta TensDigitOffset,X       ; save A in TensDigitOffset+1 or TensDigitOffset
+
+  dex
+  bpl .GetScoreOffsetsLoop
+  rts
 
   ; game over subroutine
 GameOver subroutine
