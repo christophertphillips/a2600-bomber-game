@@ -134,16 +134,19 @@ NextFrame:
 ; Housekeeping (in VBLANK)
 ;--------------------------------------------------------
 
-  lda JetXPos       ; set jet horizontal position
-  ldx #0
-  jsr SetObjectXPos
+  ; set jet horizontal position
+  lda JetXPos                 ; load GRP0 position from memory
+  ldx #0                      ; indicate GRP0
+  jsr SetObjectXPos           ; call subroutine to set GRP0 horizontal position
 
-  lda BomberXPos       ; set bomber horizontal position
-  ldx #1
-  jsr SetObjectXPos
+  ; set bomber horizontal position
+  lda BomberXPos              ; load GRP1 position from memory
+  ldx #1                      ; indicate GRP1
+  jsr SetObjectXPos           ; call subroutine to set GRP! horizontal position
 
-  sta WSYNC         ; 'carriage return'
-  sta HMOVE         ; perform fine-tune offset
+  ; perform fine-tune horizontal offsets
+  sta WSYNC                   ; 'carriage return' before HMOVE
+  sta HMOVE                   ; perform fine-tune offset
 
   ; reset graphics, playfield, playfield reflection
   lda #0
@@ -156,7 +159,7 @@ NextFrame:
 
   ; calculate score offsets
   sta WSYNC
-  jsr GetScoreOffsets  ; spans a scanline
+  jsr GetScoreOffsets         ; spans a scanline
   sta WSYNC
 
   ; uses 8 scanlines
