@@ -181,56 +181,57 @@ LoopVBlank:
 ; Kernel
 ;--------------------------------------------------------
 
-  ldx #5                     ; scanline 95
+  ; draw scoreboard 
+  ldx #5                      ; scanline 95
 ScoreBoardLoop:               ; add 20 scanlines space for scoreboard 
 
-  ldy TensDigitOffset         ; load tens digit for score
-  lda Digits,Y
-  and #$F0  ;$10
-  sta ScoreSprite
+  ldy TensDigitOffset         ; load the tens digit offset for the score
+  lda Digits,Y                ; load the digit bit pattern from the lookup table
+  and #$F0                    ; remove the ones digit
+  sta ScoreSprite             ; save the Score (tens) digit pattern into RAM
   
-  ldy OnesDigitOffset         ; load ones digit for score
-  lda Digits,Y
-  and #$0F  ;$07
-  ora ScoreSprite
-  sta ScoreSprite ; 17
+  ldy OnesDigitOffset         ; load the ones digit offset for the score
+  lda Digits,Y                ; load the digit bit pattern from the lookup table
+  and #$0F                    ; remove the tens digit
+  ora ScoreSprite             ; merge it with the tens digit pattern in RAM
+  sta ScoreSprite             ; save the Score (tens + ones) digit pattern into RAM
 
-  sta WSYNC
+  sta WSYNC                   ; 'carriage return' to give enough time to draw score to left side of screen
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   
-  sta PF1                     ; display score digit (first scanline)
+  sta PF1                     ; draw score digits (first scanline)
 
-  ldy TensDigitOffset+1       ; load tens digit for timer
-  lda Digits,Y
-  and #$F0  ;$50
-  sta TimerSprite
+  ldy TensDigitOffset+1       ; load the tens digit offset for the timer
+  lda Digits,Y                ; load the digit bit pattern from the lookup table
+  and #$F0                    ; remove the ones digit
+  sta TimerSprite             ; save the Score (tens) digit pattern into RAM
 
-  ldy OnesDigitOffset+1       ; load tens digit for timer
-  lda Digits,Y
-  and #$0F  ;$07
-  ora TimerSprite
-  sta TimerSprite ;57
+  ldy OnesDigitOffset+1       ; load the tens digit offset for the score
+  lda Digits,Y                ; load the digit bit pattern from the lookup table
+  and #$0F                    ; remove the tens digit
+  ora TimerSprite             ; merge it with the tens digit pattern in RAM
+  sta TimerSprite             ; save the Score (tens + ones) digit pattern into RAM
   
   SLEEP 10                    ; delay to ensure timer digits are drawn
 
-  sta PF1                     ; display timer digit (first scanline)
+  sta PF1                     ; draw timer digits (first scanline)
 
-  sta WSYNC
+  sta WSYNC                   ; 'carriage return' to give enough time to draw score to left side of screen
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  lda ScoreSprite
-  sta PF1                     ; display score digit (second scanline)
+  lda ScoreSprite             ; load score digits
+  sta PF1                     ; display score digits (second scanline)
 
-  inc TensDigitOffset
+  inc TensDigitOffset         ; update all score/timer offsets to point to the next bit pattern of their respective digit
   inc TensDigitOffset+1
   inc OnesDigitOffset
   inc OnesDigitOffset+1
 
-  sleep 9                    ; delay to ensure timer digits are drawn
+  sleep 9                     ; delay to ensure timer digits are drawn
 
-  lda TimerSprite
+  lda TimerSprite             ; laod timer digits
   dex
-  sta PF1                     ; display timer digit (second scanline)
+  sta PF1                     ; display timer digits (second scanline)
 
   bne ScoreBoardLoop
 
