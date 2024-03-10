@@ -184,7 +184,6 @@ LoopVBlank:
   ; draw scoreboard 
   ldx #5                      ; scanline 95
 ScoreBoardLoop:               ; add 20 scanlines space for scoreboard 
-
   ldy TensDigitOffset         ; load the tens digit offset for the score
   lda Digits,Y                ; load the digit bit pattern from the lookup table
   and #$F0                    ; remove the ones digit
@@ -233,16 +232,19 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
 
   bne ScoreBoardLoop
 
-  ; at scaline 85, add extra 1 * 2 = 2 scanlines to do a "carriage return" before continuing
-  dex
-  sta WSYNC;------------------
+  sta WSYNC;------------------;
 
+
+
+  ; clear scoreboard
   lda #$00                    ; clear PF1 of digits
   sta PF1
 
-  sta WSYNC;------------------
+  sta WSYNC;------------------; draw a "buffer line" btween scoreboard and gameplay area
 
-  ; set background color, playfield prior to game loop
+
+  
+  ; configure background color, playfield
   lda #$84                    ; set background color
   sta COLUBK
 
@@ -254,9 +256,11 @@ ScoreBoardLoop:               ; add 20 scanlines space for scoreboard
   lda #$FC
   sta PF1
 
+
+
+  ; draw gameplay area
   ldx #89                     ; scanline 89
 KernelLoop:
-  
   ; draw jet sprite
   txa
   sec
@@ -271,7 +275,6 @@ DrawSpriteP0:
   lda (JetColorPtr),Y         ; load color data of given jet sprite
   sta COLUP0                  ; set player 0 line color
   sta WSYNC;------------------
-  
   
   ; draw bomber sprite
   txa
