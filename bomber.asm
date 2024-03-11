@@ -294,7 +294,7 @@ DrawSpriteP1:                 ;           (-1 if jumped to)
   dex                         ;  2   32
   cpx #$ff                    ;  2   34   determine if end of screen has been reached
   sta WSYNC;------------------;  3   36   (STA doesn't affect flags, so safe to use here)
-  bne KernelLoop              ;  3   00
+  bne KernelLoop              ;3/2   00
 
 
 
@@ -302,8 +302,8 @@ DrawSpriteP1:                 ;           (-1 if jumped to)
 ; Overscan
 ;--------------------------------------------------------
 
-  lda #$02          ; turn on VBLANK
-  sta VBLANK
+  lda #$02                    ;  2   02 turn on VBLANK
+  sta VBLANK                  ;  3   04
 
 ;--------------------------------------------------------
 ; Housekeeping (in OVERSCAN)
@@ -311,27 +311,27 @@ DrawSpriteP1:                 ;           (-1 if jumped to)
 
 ; update bomber position
 CheckBomberYPosition:
-  lda BomberYPos
-  cmp #247                    ; check if bomber if fully off-screen
-  bne DecrementBomberYPos     ; if so, directly decrement its y-position
-  lda #89                     ; else, reset its y-position at top of screen (accounting for scoreboard)
-  sta BomberYPos
-  jsr LFSR                    ; also, reset its x-position with a random value
-  lsr                         ; divide random postion by 2
-  lsr                         ; divide random postion by 2
-  clc                         ; add an offset of 40
-  adc #40
-  sta BomberXPos
+  lda BomberYPos              ;  3   07
+  cmp #247                    ;  2   10    check if bomber if fully off-screen
+  bne DecrementBomberYPos     ;3/2   12    if so, directly decrement its y-position
+  lda #89                     ;  2   14    else, reset its y-position at top of screen (accounting for scoreboard)
+  sta BomberYPos              ;  3   16
+  jsr LFSR                    ;  6   19    also, reset its x-position with a random value
+  lsr                         ;  2   61*   divide random postion by 2
+  lsr                         ;  2   63    divide random postion by 2
+  clc                         ;  2   65    add an offset of 40
+  adc #40                     ;  2   67
+  sta BomberXPos              ;  3   69
 
-DecrementBomberYPos:
-  sta WSYNC;------------------
-  dec BomberYPos
+DecrementBomberYPos:          ;           (-57 if jumped to)
+  sta WSYNC;------------------;  3   72
+  dec BomberYPos              ;  5   00
 
 ResetJetSprite:
-  lda #<JetSprite             ; set jet sprite pointer to 'normal/non-turning' sprite
-  sta JetSpritePtr
-  lda #>JetSprite
-  sta JetSpritePtr+1
+  lda #<JetSprite             ;  2   05    set jet sprite pointer to 'normal/non-turning' sprite
+  sta JetSpritePtr            ;  3   07
+  lda #>JetSprite             ;  2   10
+  sta JetSpritePtr+1          ;  3   12
 
 ; process input
 CheckP0Up:                    ; check joy = up
