@@ -183,19 +183,19 @@ LoopVBlank:
 
   ; draw scoreboard (scanline 95)
   ldx #5
-ScoreBoardLoop:               ;   (-37)     add 20 scanlines space for scoreboard 
-  ldy TensDigitOffset         ;   3   46    load the tens digit offset for the score
-  lda Digits,Y                ;   4   49    load the digit bit pattern from the lookup table
-  and #$F0                    ;   2   53    remove the ones digit
-  sta ScoreSprite             ;   3   55    save the Score (tens) digit pattern into RAM
+ScoreBoardLoop:               ;                   add 20 scanlines space for scoreboard 
+  ldy TensDigitOffset         ;   3   09    46    load the tens digit offset for the score
+  lda Digits,Y                ;   4   12    49    load the digit bit pattern from the lookup table
+  and #$F0                    ;   2   16    53    remove the ones digit
+  sta ScoreSprite             ;   3   18    55    save the Score (tens) digit pattern into RAM
   
-  ldy OnesDigitOffset         ;   3   58    load the ones digit offset for the score
-  lda Digits,Y                ;   4   61    load the digit bit pattern from the lookup table
-  and #$0F                    ;   2   65    remove the tens digit
-  ora ScoreSprite             ;   3   67    merge it with the tens digit pattern in RAM
-  sta ScoreSprite             ;   3   70    save the Score (tens + ones) digit pattern into RAM
+  ldy OnesDigitOffset         ;   3   21    58    load the ones digit offset for the score
+  lda Digits,Y                ;   4   24    61    load the digit bit pattern from the lookup table
+  and #$0F                    ;   2   28    65    remove the tens digit
+  ora ScoreSprite             ;   3   30    67    merge it with the tens digit pattern in RAM
+  sta ScoreSprite             ;   3   33    70    save the Score (tens + ones) digit pattern into RAM
 
-  sta WSYNC;------------------;   3   73    'carriage return' to give enough time to draw score to left side of screen
+  sta WSYNC;------------------;   3   36    73    'carriage return' to give enough time to draw score to left side of screen
   
   sta PF1                     ;   3   00    draw score digits (first scanline)
 
@@ -262,19 +262,19 @@ ScoreBoardLoop:               ;   (-37)     add 20 scanlines space for scoreboar
   ldx #89                     ;   2   20    scanline 89
 KernelLoop:                   ;             (+19 if first iteration)
   ; draw jet sprite
-  txa                         ;   2   03
-  sec                         ;   2   05
-  sbc JetYPos                 ;   3   07    subtract jet Y coord
-  cmp JET_HEIGHT              ;   3   10    compare to jet height
-  bcc DrawSpriteP0            ; 3/2   13    if result < jet height, draw with current index
-  lda #0                      ;   2   15    else, else, set index to 0
-DrawSpriteP0:                 ;             (-1 if jumped to)
-  tay                         ;   2   17
-  lda (JetSpritePtr),Y        ;   5   19    load bitmap data of given jet sprite
-  sta GRP0                    ;   3   24    set player 0 line bitmap
-  lda (JetColorPtr),Y         ;   5   27    load color data of given jet sprite
-  sta COLUP0                  ;   3   32    set player 0 line color
-  sta WSYNC;------------------;   3   35
+  txa                         ;   2   22          03
+  sec                         ;   2   24          05    
+  sbc JetYPos                 ;   3   26          07          subtract jet Y coord
+  cmp JET_HEIGHT              ;   3   29          10          compare to jet height
+  bcc DrawSpriteP0            ; 3/2   32          13          if result < jet height, draw with current index
+  lda #0                      ;   2   34          15          else, else, set index to 0
+DrawSpriteP0:
+  tay                         ;   2   36    35    17    16
+  lda (JetSpritePtr),Y        ;   5   38    37    19    18    load bitmap data of given jet sprite
+  sta GRP0                    ;   3   43    42    24    23    set player 0 line bitmap
+  lda (JetColorPtr),Y         ;   5   46    45    27    26    load color data of given jet sprite
+  sta COLUP0                  ;   3   51    50    32    31    set player 0 line color
+  sta WSYNC;------------------;   3   54    53    35    34
   
   ; draw bomber sprite
   txa                         ;   2   00
@@ -283,12 +283,12 @@ DrawSpriteP0:                 ;             (-1 if jumped to)
   cmp BOMBER_HEIGHT           ;   3   07    compare to bomber height
   bcc DrawSpriteP1            ; 3/2   10    if result < bomber height, draw with current index
   lda #0                      ;   2   12    else, else, set table index to 0
-DrawSpriteP1:                 ;             (-1 if jumped to)
-  tay                         ;   2   14
-  lda (BomberSpritePtr),Y     ;   5   16    load bitmap data of given bomber sprite
-  sta GRP1                    ;   3   21    set player 1 line bitmap
-  lda (BomberColorPtr),Y      ;   5   24    load color data of given bomber sprite
-  sta COLUP1                  ;   3   29    set player 1 line color
+DrawSpriteP1:
+  tay                         ;   2   14    13
+  lda (BomberSpritePtr),Y     ;   5   16    15    load bitmap data of given bomber sprite
+  sta GRP1                    ;   3   21    20    set player 1 line bitmap
+  lda (BomberColorPtr),Y      ;   5   24    23    load color data of given bomber sprite
+  sta COLUP1                  ;   3   29    28    set player 1 line color
   ;sta WSYNC
   
   dex                         ;   2   32
@@ -323,9 +323,9 @@ CheckBomberYPosition:
   adc #40                     ;   2   67
   sta BomberXPos              ;   3   69
 
-DecrementBomberYPos:          ;           (-57 if jumped to)
-  sta WSYNC;------------------;   3   72
-  dec BomberYPos              ;   5   00
+DecrementBomberYPos:
+  sta WSYNC;------------------;   3   72    15
+  dec BomberYPos              ;   5   00    00
 
 ResetJetSprite:
   lda #<JetSprite             ;   2   05    set jet sprite pointer to 'normal/non-turning' sprite
@@ -333,7 +333,7 @@ ResetJetSprite:
   lda #>JetSprite             ;   2   10
   sta JetSpritePtr+1          ;   3   12
 
-; process input
+; process input 
 CheckP0Up:                    ; check joy = up
   lda #$10
   bit SWCHA
