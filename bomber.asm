@@ -337,30 +337,30 @@ ResetJetSprite:
 CheckP0Up:                    ; check joy = up
   lda #$10                    ;   2   15
   bit SWCHA                   ;   4   17
-  bne CheckP0Down             ; 2/3   21  if joy != up, skip
-  inc JetYPos                 ;   5   23  else, increment JetYPos
+  bne CheckP0Down             ; 2/3   21    21  if joy != up, skip
+  inc JetYPos                 ;   5         23  else, increment JetYPos
 
 CheckP0Down:                  ; check joy = down
-  lda #$20                    ;   2   28
-  bit SWCHA                   ;   4   30
-  bne CheckP0Left             ; 2/3   34  if joy != down, skip
+  lda #$20                    ;   2   24    28
+  bit SWCHA                   ;   4   26    30
+  bne CheckP0Left             ; 2/3   30    34  if joy != down, skip
   dec JetYPos                 ;   5       if down, increment JetYPos
 
 CheckP0Left:                  ; check joy = left
-  lda #$40                    ;   2   37  
-  bit SWCHA                   ;   4   39
-  bne CheckP0Right            ; 2/3   43  if joy != left, skip
-  dec JetXPos                 ;   5   45  if left, decrement JetXPos
+  lda #$40                    ;   2   33    37  
+  bit SWCHA                   ;   4   35    39
+  bne CheckP0Right            ; 2/3   39    43  if joy != left, skip
+  dec JetXPos                 ;   5         45  if left, decrement JetXPos
 
-  lda #<JetSpriteTurn         ;   2   50  set jet sprite pointer to 'turning' sprite
-  sta JetSpritePtr            ;   3   52
-  lda #>JetSpriteTurn         ;   2   55
-  sta JetSpritePtr+1          ;   3   57
+  lda #<JetSpriteTurn         ;   2         50  set jet sprite pointer to 'turning' sprite
+  sta JetSpritePtr            ;   3         52
+  lda #>JetSpriteTurn         ;   2         55
+  sta JetSpritePtr+1          ;   3         57
 
 CheckP0Right:                 ; check joy = right
-  lda #$80                    ;   2   60
-  bit SWCHA                   ;   4   62
-  bne NoInput                 ; 2/3   66    if joy != right, skip
+  lda #$80                    ;   2   42    60
+  bit SWCHA                   ;   4   44    62
+  bne NoInput                 ; 2/3   48    66    if joy != right, skip
   inc JetXPos                 ;   5     else, increment JetXPos
 
   lda #<JetSpriteTurn         ;   2     set jet sprite pointer to 'turning' sprite
@@ -370,20 +370,20 @@ CheckP0Right:                 ; check joy = right
 
 NoInput:
 
-  sta WSYNC;------------------;   3   69
+  sta WSYNC;------------------;   3   51    69
 
 ; check collisions
 CheckP0P1Collision:           ; check if jet and bomber have collided
   lda #$80                    ;   2   00
   bit CXPPMM                  ;   3   02
   beq CheckP0PFCollision      ; 2/3   05  if no, skip
-  jsr GameOver                ;   6       else, call game over subroutine
+  jsr GameOver                ;   6   07  else, call game over subroutine
 
 CheckP0PFCollision:           ; check if jet and playfield have collided
   lda #$80                    ;   2   08   
   bit CXP0FB                  ;   3   10
   beq NoCollision             ; 2/3   13  if no, skip
-  jsr GameOver                ;   6       else, call game over subroutine
+  jsr GameOver                ;   6   15  else, call game over subroutine
 
 NoCollision:
   sta CXCLR                   ;   3   16  clear all collision registers
