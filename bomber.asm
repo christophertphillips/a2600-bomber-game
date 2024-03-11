@@ -335,58 +335,58 @@ ResetJetSprite:
 
 ; process input 
 CheckP0Up:                    ; check joy = up
-  lda #$10
-  bit SWCHA
-  bne CheckP0Down             ; if joy != up, skip
-  inc JetYPos                 ; else, increment JetYPos
+  lda #$10                    ;   2   15
+  bit SWCHA                   ;   4   17
+  bne CheckP0Down             ; 2/3   21  if joy != up, skip
+  inc JetYPos                 ;   5   23  else, increment JetYPos
 
 CheckP0Down:                  ; check joy = down
-  lda #$20
-  bit SWCHA
-  bne CheckP0Left             ; if joy != down, skip
-  dec JetYPos                 ; if down, increment JetYPos
+  lda #$20                    ;   2   28
+  bit SWCHA                   ;   4   30
+  bne CheckP0Left             ; 2/3   34  if joy != down, skip
+  dec JetYPos                 ;   5       if down, increment JetYPos
 
 CheckP0Left:                  ; check joy = left
-  lda #$40
-  bit SWCHA
-  bne CheckP0Right            ; if joy != left, skip
-  dec JetXPos                 ; if left, decrement JetXPos
+  lda #$40                    ;   2   37  
+  bit SWCHA                   ;   4   39
+  bne CheckP0Right            ; 2/3   43  if joy != left, skip
+  dec JetXPos                 ;   5   45  if left, decrement JetXPos
 
-  lda #<JetSpriteTurn         ; set jet sprite pointer to 'turning' sprite
-  sta JetSpritePtr
-  lda #>JetSpriteTurn
-  sta JetSpritePtr+1
+  lda #<JetSpriteTurn         ;   2   50  set jet sprite pointer to 'turning' sprite
+  sta JetSpritePtr            ;   3   52
+  lda #>JetSpriteTurn         ;   2   55
+  sta JetSpritePtr+1          ;   3   57
 
 CheckP0Right:                 ; check joy = right
-  lda #$80
-  bit SWCHA
-  bne NoInput                 ; if joy != right, skip
-  inc JetXPos                 ; else, increment JetXPos
+  lda #$80                    ;   2   60
+  bit SWCHA                   ;   4   62
+  bne NoInput                 ; 2/3   66    if joy != right, skip
+  inc JetXPos                 ;   5     else, increment JetXPos
 
-  lda #<JetSpriteTurn         ; set jet sprite pointer to 'turning' sprite
-  sta JetSpritePtr
-  lda #>JetSpriteTurn
-  sta JetSpritePtr+1
+  lda #<JetSpriteTurn         ;   2     set jet sprite pointer to 'turning' sprite
+  sta JetSpritePtr            ;   3
+  lda #>JetSpriteTurn         ;   2
+  sta JetSpritePtr+1          ;   3
 
 NoInput:
 
-  sta WSYNC;------------------
+  sta WSYNC;------------------;   3   69
 
 ; check collisions
 CheckP0P1Collision:           ; check if jet and bomber have collided
-  lda #$80
-  bit CXPPMM
-  beq CheckP0PFCollision      ; if no, skip
-  jsr GameOver                ; else, call game over subroutine
+  lda #$80                    ;   2   00
+  bit CXPPMM                  ;   3   02
+  beq CheckP0PFCollision      ; 2/3   05  if no, skip
+  jsr GameOver                ;   6       else, call game over subroutine
 
 CheckP0PFCollision:           ; check if jet and playfield have collided
-  lda #$80
-  bit CXP0FB
-  beq NoCollision             ; if no, skip
-  jsr GameOver                ; else, call game over subroutine
+  lda #$80                    ;   2   08   
+  bit CXP0FB                  ;   3   10
+  beq NoCollision             ; 2/3   13  if no, skip
+  jsr GameOver                ;   6       else, call game over subroutine
 
 NoCollision:
-  sta CXCLR                   ; clear all collision registers
+  sta CXCLR                   ;   3   16  clear all collision registers
 
   ; uses 2 scanline
 
@@ -394,13 +394,13 @@ NoCollision:
 ; Overscan (Cont.)
 ;--------------------------------------------------------
 
-  ldx #28                     ; 30 - 2 = 28 scanlines
+  ldx #28                     ;   2   19      30 - 2 = 28 scanlines
 LoopOverscan:
-  dex
-  sta WSYNC;------------------
-  bne LoopOverscan
+  dex                         ;   2   21  03
+  sta WSYNC;------------------;   3   23  05
+  bne LoopOverscan            ; 2/3   00  00
 
-  jmp NextFrame
+  jmp NextFrame               ;   3   02
 
 ;--------------------------------------------------------
 ; Subroutines
