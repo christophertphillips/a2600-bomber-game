@@ -197,61 +197,61 @@ ScoreBoardLoop:               ;                   add 20 scanlines space for sco
 
   sta WSYNC;------------------;   3   36    73    'carriage return' to give enough time to draw score to left side of screen
   
-  sta PF1                     ;   3   00    draw score digits (first scanline)
+  sta PF1                     ;   3   00          draw score digits (first scanline)
 
-  ldy TensDigitOffset+1       ;   3   03    load the tens digit offset for the timer
-  lda Digits,Y                ;   4   06    load the digit bit pattern from the lookup table
-  and #$F0                    ;   2   10    remove the ones digit
-  sta TimerSprite             ;   3   12    save the Score (tens) digit pattern into RAM
+  ldy TensDigitOffset+1       ;   3   03          load the tens digit offset for the timer
+  lda Digits,Y                ;   4   06          load the digit bit pattern from the lookup table
+  and #$F0                    ;   2   10          remove the ones digit
+  sta TimerSprite             ;   3   12          save the Score (tens) digit pattern into RAM
 
-  ldy OnesDigitOffset+1       ;   3   15    load the tens digit offset for the score
-  lda Digits,Y                ;   4   18    load the digit bit pattern from the lookup table
-  and #$0F                    ;   2   22    remove the tens digit
-  ora TimerSprite             ;   3   24    merge it with the tens digit pattern in RAM
-  sta TimerSprite             ;   3   27    save the Score (tens + ones) digit pattern into RAM
+  ldy OnesDigitOffset+1       ;   3   15          load the tens digit offset for the score
+  lda Digits,Y                ;   4   18          load the digit bit pattern from the lookup table
+  and #$0F                    ;   2   22          remove the tens digit
+  ora TimerSprite             ;   3   24          merge it with the tens digit pattern in RAM
+  sta TimerSprite             ;   3   27          save the Score (tens + ones) digit pattern into RAM
   
-  SLEEP 10                    ;  10   30    delay to ensure timer digits are drawn
+  SLEEP 10                    ;  10   30          delay to ensure timer digits are drawn
 
-  sta PF1                     ;   3   40    draw timer digits (first scanline)
+  sta PF1                     ;   3   40          draw timer digits (first scanline)
 
-  sta WSYNC;------------------;   3   43    'carriage return' to give enough time to draw score to left side of screen
+  sta WSYNC;------------------;   3   43          'carriage return' to give enough time to draw score to left side of screen
 
-  lda ScoreSprite             ;   3   00    load score digits
-  sta PF1                     ;   3   03    display score digits (second scanline)
+  lda ScoreSprite             ;   3   00          load score digits
+  sta PF1                     ;   3   03          display score digits (second scanline)
 
-  inc TensDigitOffset         ;   5   06    update all score/timer offsets to point to the next bit pattern of their respective digit
+  inc TensDigitOffset         ;   5   06          update all score/timer offsets to point to the next bit pattern of their respective digit
   inc TensDigitOffset+1       ;   5   11
   inc OnesDigitOffset         ;   5   16
   inc OnesDigitOffset+1       ;   5   21
 
-  SLEEP 9                     ;   9   26    delay to ensure timer digits are drawn
+  SLEEP 9                     ;   9   26          delay to ensure timer digits are drawn
 
-  lda TimerSprite             ;   3   35    load timer digits
+  lda TimerSprite             ;   3   35          load timer digits
   dex                         ;   2   38
-  sta PF1                     ;   3   40    display timer digits (second scanline)
+  sta PF1                     ;   3   40          display timer digits (second scanline)
 
-  bne ScoreBoardLoop          ; 3/2   43
+  bne ScoreBoardLoop          ; 2/3   43
 
   sta WSYNC;------------------;   3   45
 
 
 
   ; clear scoreboard
-  lda #$00                    ;   2   00    clear PF1 of digits
+  lda #$00                    ;   2   00          clear PF1 of digits
   sta PF1                     ;   3   02
 
-  sta WSYNC;------------------;   3   05    draw a "buffer line" btween scoreboard and gameplay area
+  sta WSYNC;------------------;   3   05          draw a "buffer line" btween scoreboard and gameplay area
 
 
   
   ; configure background color, playfield
-  lda #$84                    ;   2   00    set background color
+  lda #$84                    ;   2   00          set background color
   sta COLUBK                  ;   3   02
 
-  lda #$01                    ;   2   05    mirror playfield (since 'land' must be symmetric)
+  lda #$01                    ;   2   05          mirror playfield (since 'land' must be symmetric)
   sta CTRLPF                  ;   3   07
 
-  lda #$F0                    ;   2   10    set plafield blocks
+  lda #$F0                    ;   2   10          set plafield blocks
   sta PF0                     ;   3   12
   lda #$FC                    ;   2   15
   sta PF1                     ;   3   17
@@ -259,14 +259,14 @@ ScoreBoardLoop:               ;                   add 20 scanlines space for sco
 
 
   ; draw gameplay area
-  ldx #89                     ;   2   20    scanline 89
-KernelLoop:                   ;             (+19 if first iteration)
+  ldx #89                     ;   2   20          (scanline 89)
+KernelLoop:
   ; draw jet sprite
   txa                         ;   2   22          03
   sec                         ;   2   24          05    
   sbc JetYPos                 ;   3   26          07          subtract jet Y coord
   cmp JET_HEIGHT              ;   3   29          10          compare to jet height
-  bcc DrawSpriteP0            ; 3/2   32          13          if result < jet height, draw with current index
+  bcc DrawSpriteP0            ; 2/3   32          13          if result < jet height, draw with current index
   lda #0                      ;   2   34          15          else, else, set index to 0
 DrawSpriteP0:
   tay                         ;   2   36    35    17    16
@@ -279,10 +279,10 @@ DrawSpriteP0:
   ; draw bomber sprite
   txa                         ;   2   00
   sec                         ;   2   02
-  sbc BomberYPos              ;   3   04    subtract bomber Y coord
-  cmp BOMBER_HEIGHT           ;   3   07    compare to bomber height
-  bcc DrawSpriteP1            ; 3/2   10    if result < bomber height, draw with current index
-  lda #0                      ;   2   12    else, else, set table index to 0
+  sbc BomberYPos              ;   3   04          subtract bomber Y coord
+  cmp BOMBER_HEIGHT           ;   3   07          compare to bomber height
+  bcc DrawSpriteP1            ; 2/3   10          if result < bomber height, draw with current index
+  lda #0                      ;   2   12          else, else, set table index to 0
 DrawSpriteP1:
   tay                         ;   2   14    13
   lda (BomberSpritePtr),Y     ;   5   16    15    load bitmap data of given bomber sprite
@@ -292,9 +292,9 @@ DrawSpriteP1:
   ;sta WSYNC
   
   dex                         ;   2   32
-  cpx #$ff                    ;   2   34    determine if end of screen has been reached
-  sta WSYNC;------------------;   3   36    (STA doesn't affect flags, so safe to use here)
-  bne KernelLoop              ; 3/2   00
+  cpx #$ff                    ;   2   34          determine if end of screen has been reached
+  sta WSYNC;------------------;   3   36          (STA doesn't affect flags, so safe to use here)
+  bne KernelLoop              ; 2/3   00
 
 
 
@@ -302,7 +302,7 @@ DrawSpriteP1:
 ; Overscan
 ;--------------------------------------------------------
 
-  lda #$02                    ;   2   02    turn on VBLANK
+  lda #$02                    ;   2   02  turn on VBLANK
   sta VBLANK                  ;   3   04
 
 ;--------------------------------------------------------
@@ -312,14 +312,14 @@ DrawSpriteP1:
 ; update bomber position
 CheckBomberYPosition:
   lda BomberYPos              ;   3   07
-  cmp #247                    ;   2   10    check if bomber if fully off-screen
-  bne DecrementBomberYPos     ; 3/2   12    if so, directly decrement its y-position
-  lda #89                     ;   2   14    else, reset its y-position at top of screen (accounting for scoreboard)
+  cmp #247                    ;   2   10          check if bomber if fully off-screen
+  bne DecrementBomberYPos     ; 2/3   12          if so, directly decrement its y-position
+  lda #89                     ;   2   14          else, reset its y-position at top of screen (accounting for scoreboard)
   sta BomberYPos              ;   3   16
-  jsr LFSR                    ;   6   19    also, reset its x-position with a random value
-  lsr                         ;   2   61*   divide random postion by 2
-  lsr                         ;   2   63    divide random postion by 2
-  clc                         ;   2   65    add an offset of 40
+  jsr LFSR                    ;   6   19          also, reset its x-position with a random value
+  lsr                         ;   2   61*         divide random postion by 2
+  lsr                         ;   2   63          divide random postion by 2
+  clc                         ;   2   65          add an offset of 40
   adc #40                     ;   2   67
   sta BomberXPos              ;   3   69
 
@@ -328,7 +328,7 @@ DecrementBomberYPos:
   dec BomberYPos              ;   5   00    00
 
 ResetJetSprite:
-  lda #<JetSprite             ;   2   05    set jet sprite pointer to 'normal/non-turning' sprite
+  lda #<JetSprite             ;   2   05          set jet sprite pointer to 'normal/non-turning' sprite
   sta JetSpritePtr            ;   3   07
   lda #>JetSprite             ;   2   10
   sta JetSpritePtr+1          ;   3   12
@@ -337,22 +337,22 @@ ResetJetSprite:
 CheckP0Up:                    ; check joy = up
   lda #$10                    ;   2   15
   bit SWCHA                   ;   4   17
-  bne CheckP0Down             ; 2/3   21    21  if joy != up, skip
-  inc JetYPos                 ;   5         23  else, increment JetYPos
+  bne CheckP0Down             ; 2/3   21    21    if joy != up, skip
+  inc JetYPos                 ;   5         23    else, increment JetYPos
 
 CheckP0Down:                  ; check joy = down
   lda #$20                    ;   2   24    28
   bit SWCHA                   ;   4   26    30
-  bne CheckP0Left             ; 2/3   30    34  if joy != down, skip
-  dec JetYPos                 ;   5       if down, increment JetYPos
+  bne CheckP0Left             ; 2/3   30    34    if joy != down, skip
+  dec JetYPos                 ;   5               if down, increment JetYPos
 
 CheckP0Left:                  ; check joy = left
   lda #$40                    ;   2   33    37  
   bit SWCHA                   ;   4   35    39
-  bne CheckP0Right            ; 2/3   39    43  if joy != left, skip
-  dec JetXPos                 ;   5         45  if left, decrement JetXPos
+  bne CheckP0Right            ; 2/3   39    43    if joy != left, skip
+  dec JetXPos                 ;   5         45    if left, decrement JetXPos
 
-  lda #<JetSpriteTurn         ;   2         50  set jet sprite pointer to 'turning' sprite
+  lda #<JetSpriteTurn         ;   2         50    set jet sprite pointer to 'turning' sprite
   sta JetSpritePtr            ;   3         52
   lda #>JetSpriteTurn         ;   2         55
   sta JetSpritePtr+1          ;   3         57
@@ -361,9 +361,9 @@ CheckP0Right:                 ; check joy = right
   lda #$80                    ;   2   42    60
   bit SWCHA                   ;   4   44    62
   bne NoInput                 ; 2/3   48    66    if joy != right, skip
-  inc JetXPos                 ;   5     else, increment JetXPos
+  inc JetXPos                 ;   5               else, increment JetXPos
 
-  lda #<JetSpriteTurn         ;   2     set jet sprite pointer to 'turning' sprite
+  lda #<JetSpriteTurn         ;   2               set jet sprite pointer to 'turning' sprite
   sta JetSpritePtr            ;   3
   lda #>JetSpriteTurn         ;   2
   sta JetSpritePtr+1          ;   3
@@ -373,20 +373,20 @@ NoInput:
   sta WSYNC;------------------;   3   51    69
 
 ; check collisions
-CheckP0P1Collision:           ; check if jet and bomber have collided
+CheckP0P1Collision:           ;                   check if jet and bomber have collided
   lda #$80                    ;   2   00
   bit CXPPMM                  ;   3   02
-  beq CheckP0PFCollision      ; 2/3   05  if no, skip
-  jsr GameOver                ;   6   07  else, call game over subroutine
+  beq CheckP0PFCollision      ; 2/3   05          if no, skip
+  jsr GameOver                ;   6   07          else, call game over subroutine
 
-CheckP0PFCollision:           ; check if jet and playfield have collided
+CheckP0PFCollision:           ;                   check if jet and playfield have collided
   lda #$80                    ;   2   08   
   bit CXP0FB                  ;   3   10
-  beq NoCollision             ; 2/3   13  if no, skip
-  jsr GameOver                ;   6   15  else, call game over subroutine
+  beq NoCollision             ; 2/3   13          if no, skip
+  jsr GameOver                ;   6   15          else, call game over subroutine
 
 NoCollision:
-  sta CXCLR                   ;   3   16  clear all collision registers
+  sta CXCLR                   ;   3   16          clear all collision registers
 
   ; uses 2 scanline
 
@@ -394,7 +394,7 @@ NoCollision:
 ; Overscan (Cont.)
 ;--------------------------------------------------------
 
-  ldx #28                     ;   2   19      30 - 2 = 28 scanlines
+  ldx #28                     ;   2   19          (30 - 2 = 28 scanlines)
 LoopOverscan:
   dex                         ;   2   21  03
   sta WSYNC;------------------;   3   23  05
