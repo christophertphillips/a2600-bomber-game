@@ -155,10 +155,16 @@ NextFrame:
   sta PF0                     ;   3   11    disable playfield
   sta PF1                     ;   3   14
   sta PF2                     ;   3   17
+  
   sta CTRLPF                  ;   3   20    repeat playfield (since score/timer must be asymmetric)
+  
+  sta COLUBK                  ;   3   23    set background to black
+
+  lda #$1F                    ;   2   26    set playfield (digits) to yellow
+  sta COLUPF                  ;   3   28
 
   ; calculate score offsets
-  sta WSYNC;5-----------------;   3   23
+  sta WSYNC;5-----------------;   3   31
   jsr GetScoreOffsets         ;   6   00    (spans a scanline)
   sta WSYNC;7-----------------;   3   00
 
@@ -248,33 +254,36 @@ ScoreBoardLoop:               ;                   add 20 scanlines space for sco
   lda #$84                    ;   2   00          set background color
   sta COLUBK                  ;   3   02
 
-  lda #$01                    ;   2   05          mirror playfield (since 'land' must be symmetric)
-  sta CTRLPF                  ;   3   07
+  lda #$C2                    ;   2   05          set playfield color
+  sta COLUPF                  ;   3   07
 
-  lda #$F0                    ;   2   10          set plafield blocks
-  sta PF0                     ;   3   12
-  lda #$FC                    ;   2   15
-  sta PF1                     ;   3   17
+  lda #$01                    ;   2   10          mirror playfield (since 'land' must be symmetric)
+  sta CTRLPF                  ;   3   12
+
+  lda #$F0                    ;   2   15          set plafield blocks
+  sta PF0                     ;   3   17
+  lda #$FC                    ;   2   20
+  sta PF1                     ;   3   22
 
 
 
   ; draw gameplay area
-  ldx #89                     ;   2   20          (scanline 89)
+  ldx #89                     ;   2   25          (scanline 89)
 KernelLoop:
   ; draw jet sprite
-  txa                         ;   2   22          03
-  sec                         ;   2   24          05    
-  sbc JetYPos                 ;   3   26          07          subtract jet Y coord
-  cmp JET_HEIGHT              ;   3   29          10          compare to jet height
-  bcc DrawSpriteP0            ; 2/3   32          13          if result < jet height, draw with current index
-  lda #0                      ;   2   34          15          else, else, set index to 0
+  txa                         ;   2   27          03
+  sec                         ;   2   29          05    
+  sbc JetYPos                 ;   3   31          07          subtract jet Y coord
+  cmp JET_HEIGHT              ;   3   34          10          compare to jet height
+  bcc DrawSpriteP0            ; 2/3   37          13          if result < jet height, draw with current index
+  lda #0                      ;   2   39          15          else, else, set index to 0
 DrawSpriteP0:
-  tay                         ;   2   36    35    17    16
-  lda (JetSpritePtr),Y        ;   5   38    37    19    18    load bitmap data of given jet sprite
-  sta GRP0                    ;   3   43    42    24    23    set player 0 line bitmap
-  lda (JetColorPtr),Y         ;   5   46    45    27    26    load color data of given jet sprite
-  sta COLUP0                  ;   3   51    50    32    31    set player 0 line color
-  sta WSYNC;49,227------------;   3   54    53    35    34
+  tay                         ;   2   41    40    17    16
+  lda (JetSpritePtr),Y        ;   5   43    42    19    18    load bitmap data of given jet sprite
+  sta GRP0                    ;   3   48    47    24    23    set player 0 line bitmap
+  lda (JetColorPtr),Y         ;   5   51    50    27    26    load color data of given jet sprite
+  sta COLUP0                  ;   3   56    55    32    31    set player 0 line color
+  sta WSYNC;49,227------------;   3   59    58    35    34
   
   ; draw bomber sprite
   txa                         ;   2   00
