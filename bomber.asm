@@ -123,9 +123,9 @@ NextFrame:
 ; VSYNC
 ;--------------------------------------------------------
 
-  sta WSYNC;------------------
-  sta WSYNC;------------------
-  sta WSYNC;------------------
+  sta WSYNC;259---------------
+  sta WSYNC;260---------------
+  sta WSYNC;261---------------
 
   lda #$00                    ;  2   00
   sta VSYNC                   ;  3   02 turn off VSYNC
@@ -137,15 +137,15 @@ NextFrame:
   ; set jet horizontal position
   lda JetXPos                 ;   3   05    load GRP0 position from memory
   ldx #0                      ;   2   08    indicate GRP0
-  jsr SetObjectXPos           ;   6   10    call subroutine to set GRP0 horizontal position
+  jsr SetObjectXPos           ;   6   10    call subroutine to set GRP0 horizontal position (spans two scanlines)
 
   ; set bomber horizontal position
   lda BomberXPos              ;   3   06*   load GRP1 position from memory
   ldx #1                      ;   2   09    indicate GRP1
-  jsr SetObjectXPos           ;   6   11    call subroutine to set GRP1 horizontal position
+  jsr SetObjectXPos           ;   6   11    call subroutine to set GRP1 horizontal position (spans two scanlines)
 
   ; perform fine-tune horizontal offsets
-  sta WSYNC;------------------;   3   06*   'carriage return' before HMOVE
+  sta WSYNC;4-----------------;   3   06*   'carriage return' before HMOVE
   sta HMOVE                   ;   3   00    perform fine-tune offset
 
   ; reset graphics, playfield, playfield reflection
@@ -158,9 +158,9 @@ NextFrame:
   sta CTRLPF                  ;   3   20    repeat playfield (since score/timer must be asymmetric)
 
   ; calculate score offsets
-  sta WSYNC;------------------;   3   23
+  sta WSYNC;5-----------------;   3   23
   jsr GetScoreOffsets         ;   6   00    (spans a scanline)
-  sta WSYNC;------------------;   3   00
+  sta WSYNC;7-----------------;   3   00
 
   ; uses 8 scanlines
 
@@ -171,7 +171,7 @@ NextFrame:
   ldx #29
 LoopVBlank:
   dex
-  sta WSYNC;------------------
+  sta WSYNC;8,36--------------
   bne LoopVBlank
 
   lda #$0
@@ -195,7 +195,7 @@ ScoreBoardLoop:               ;                   add 20 scanlines space for sco
   ora ScoreSprite             ;   3   30    67    merge it with the tens digit pattern in RAM
   sta ScoreSprite             ;   3   33    70    save the Score (tens + ones) digit pattern into RAM
 
-  sta WSYNC;------------------;   3   36    73    'carriage return' to give enough time to draw score to left side of screen
+  sta WSYNC;37,45-------------;   3   36    73    'carriage return' to give enough time to draw score to left side of screen
   
   sta PF1                     ;   3   00          draw score digits (first scanline)
 
@@ -214,7 +214,7 @@ ScoreBoardLoop:               ;                   add 20 scanlines space for sco
 
   sta PF1                     ;   3   40          draw timer digits (first scanline)
 
-  sta WSYNC;------------------;   3   43          'carriage return' to give enough time to draw score to left side of screen
+  sta WSYNC;38,46-------------;   3   43          'carriage return' to give enough time to draw score to left side of screen
 
   lda ScoreSprite             ;   3   00          load score digits
   sta PF1                     ;   3   03          display score digits (second scanline)
@@ -232,7 +232,7 @@ ScoreBoardLoop:               ;                   add 20 scanlines space for sco
 
   bne ScoreBoardLoop          ; 2/3   43
 
-  sta WSYNC;------------------;   3   45
+  sta WSYNC;47----------------;   3   45
 
 
 
@@ -240,7 +240,7 @@ ScoreBoardLoop:               ;                   add 20 scanlines space for sco
   lda #$00                    ;   2   00          clear PF1 of digits
   sta PF1                     ;   3   02
 
-  sta WSYNC;------------------;   3   05          draw a "buffer line" btween scoreboard and gameplay area
+  sta WSYNC;48----------------;   3   05          draw a "buffer line" btween scoreboard and gameplay area
 
 
   
@@ -274,7 +274,7 @@ DrawSpriteP0:
   sta GRP0                    ;   3   43    42    24    23    set player 0 line bitmap
   lda (JetColorPtr),Y         ;   5   46    45    27    26    load color data of given jet sprite
   sta COLUP0                  ;   3   51    50    32    31    set player 0 line color
-  sta WSYNC;------------------;   3   54    53    35    34
+  sta WSYNC;49,227------------;   3   54    53    35    34
   
   ; draw bomber sprite
   txa                         ;   2   00
@@ -293,7 +293,7 @@ DrawSpriteP1:
   
   dex                         ;   2   32
   cpx #$ff                    ;   2   34          determine if end of screen has been reached
-  sta WSYNC;------------------;   3   36          (STA doesn't affect flags, so safe to use here)
+  sta WSYNC;50,228------------;   3   36          (STA doesn't affect flags, so safe to use here)
   bne KernelLoop              ; 2/3   00
 
 
@@ -324,7 +324,7 @@ CheckBomberYPosition:
   sta BomberXPos              ;   3   69
 
 DecrementBomberYPos:
-  sta WSYNC;------------------;   3   72    15
+  sta WSYNC;229---------------;   3   72    15
   dec BomberYPos              ;   5   00    00
 
 ResetJetSprite:
@@ -370,7 +370,7 @@ CheckP0Right:                 ; check joy = right
 
 NoInput:
 
-  sta WSYNC;------------------;   3   51    69
+  sta WSYNC;230---------------;   3   51    69
 
 ; check collisions
 CheckP0P1Collision:           ;                   check if jet and bomber have collided
@@ -397,7 +397,7 @@ NoCollision:
   ldx #28                     ;   2   19          (30 - 2 = 28 scanlines)
 LoopOverscan:
   dex                         ;   2   21  03
-  sta WSYNC;------------------;   3   23  05
+  sta WSYNC;231,258-----------;   3   23  05
   bne LoopOverscan            ; 2/3   00  00
 
   jmp NextFrame               ;   3   02
