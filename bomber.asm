@@ -247,6 +247,8 @@ ScoreBoardLoop:               ;                   add 20 scanlines space for sco
   sta PF1                     ;   3   02
 
   sta WSYNC;48----------------;   3   05          draw a "buffer line" btween scoreboard and gameplay area
+  sta WSYNC;49----------------;
+  sta WSYNC;50----------------;
 
 
   
@@ -268,7 +270,7 @@ ScoreBoardLoop:               ;                   add 20 scanlines space for sco
 
 
   ; draw gameplay area
-  ldx #89                     ;   2   25          (scanline 89)
+  ldx #88                     ;   2   25          (scanline 89)
 KernelLoop:
   ; draw jet sprite
   txa                         ;   2   27          03
@@ -283,7 +285,7 @@ DrawSpriteP0:
   sta GRP0                    ;   3   48    47    24    23    set player 0 line bitmap
   lda (JetColorPtr),Y         ;   5   51    50    27    26    load color data of given jet sprite
   sta COLUP0                  ;   3   56    55    32    31    set player 0 line color
-  sta WSYNC;49,227------------;   3   59    58    35    34
+  sta WSYNC;51,227------------;   3   59    58    35    34
   
   ; draw bomber sprite
   txa                         ;   2   00
@@ -302,7 +304,7 @@ DrawSpriteP1:
   
   dex                         ;   2   32
   cpx #$ff                    ;   2   34          determine if end of screen has been reached
-  sta WSYNC;50,228------------;   3   36          (STA doesn't affect flags, so safe to use here)
+  sta WSYNC;52,228------------;   3   36          (STA doesn't affect flags, so safe to use here)
   bne KernelLoop              ; 2/3   00
 
 
