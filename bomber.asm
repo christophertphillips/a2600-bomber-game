@@ -392,7 +392,7 @@ CheckP0P1Collision:           ;                   check if jet and bomber have c
   lda #$80                    ;   2   00
   bit CXPPMM                  ;   3   02
   beq NoCollision             ; 2/3   05          if no, skip
-  jsr GameOver                ;   6   07          else, call game over subroutine
+  jsr GameOver                ;   6   07          else, call game over subroutine @CHANGE CYCLE COUNTS@
 
 NoCollision:
   sta CXCLR                   ;   3   24*   08    clear all collision registers
@@ -415,7 +415,7 @@ LoopOverscan:
 ; Subroutines
 ;--------------------------------------------------------
 
-  org $FF24                   ; set at end of rom
+  org $FF1E                   ; set at end of rom
 
 GetScoreOffsets subroutine
   ldx #1
@@ -445,9 +445,12 @@ GetScoreOffsets subroutine
   rts
 
   ; game over subroutine
-GameOver subroutine           ; (17 cycles total)
+GameOver subroutine           ; (19 cycles total)
   lda #$40                    ; 2
-  sta COLUBK                  ; 3
+  sta BackgroundColor         ; 3
+  sta PlayfieldColor          ; 3
+  lda #0                      ; 2
+  sta Score                   ; 3
   rts                         ; 6
 
   ; LFSR subroutine
