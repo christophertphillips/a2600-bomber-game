@@ -328,21 +328,21 @@ DrawSpriteP1:
 CheckBomberYPosition:
   lda BomberYPos              ;   3   07
   cmp #247                    ;   2   10          check if bomber if fully off-screen
-  sta WSYNC                   ;                   @UPDATE CYCLE COUNTS@
-  bne DecrementBomberYPos     ; 2/3   12          if so, directly decrement its y-position
-  inc Score                   ;   5               increment score
-  inc Timer                   ;   5               increment timer
-  lda #89                     ;   2   14          else, reset its y-position at top of screen (accounting for scoreboard)
-  sta BomberYPos              ;   3   16
-  jsr LFSR                    ;   6   19          also, reset its x-position with a random value
-  lsr                         ;   2   61*         divide random postion by 2
-  lsr                         ;   2   63          divide random postion by 2
-  clc                         ;   2   65          add an offset of 40
-  adc #40                     ;   2   67
-  sta BomberXPos              ;   3   69
+  sta WSYNC;229---------------;   3   12          @UPDATE CYCLE COUNTS@
+  bne DecrementBomberYPos     ; 2/3   00          if so, directly decrement its y-position
+  inc Score                   ;   5   02            increment score
+  inc Timer                   ;   5   07            increment timer
+  lda #89                     ;   2   12          else, reset its y-position at top of screen (accounting for scoreboard)
+  sta BomberYPos              ;   3   14
+  jsr LFSR                    ;   6   17          also, reset its x-position with a random value
+  lsr                         ;   2   59*         divide random postion by 2
+  lsr                         ;   2   61          divide random postion by 2
+  clc                         ;   2   63          add an offset of 40
+  adc #40                     ;   2   65
+  sta BomberXPos              ;   3   67
 
 DecrementBomberYPos:
-  sta WSYNC;229---------------;   3   72    15
+  sta WSYNC;230---------------;   3   70    03
   dec BomberYPos              ;   5   00    00
 
 ResetJetSprite:
@@ -388,7 +388,7 @@ CheckP0Right:                 ; check joy = right
 
 NoInput:
 
-  sta WSYNC;230---------------;   3   51    69
+  sta WSYNC;231---------------;   3   51    69
 
   jsr ResetBGPF               ;   6   00          ; reset background (^NON-OPTIMIZED^)
 
@@ -411,7 +411,7 @@ NoCollision:
   ldx #27                     ;   2   57    33      (30 - 3 = 27 scanlines)
 LoopOverscan:
   dex                         ;   2   59    35
-  sta WSYNC;231,258-----------;   3   61    37
+  sta WSYNC;232,258-----------;   3   61    37
   bne LoopOverscan            ; 2/3   00    00
 
   jmp NextFrame               ;   3   02
