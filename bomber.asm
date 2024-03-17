@@ -328,6 +328,7 @@ DrawSpriteP1:
 CheckBomberYPosition:
   lda BomberYPos              ;   3   07
   cmp #247                    ;   2   10          check if bomber if fully off-screen
+  sta WSYNC                   ;                   @UPDATE CYCLE COUNTS@
   bne DecrementBomberYPos     ; 2/3   12          if so, directly decrement its y-position
   lda #89                     ;   2   14          else, reset its y-position at top of screen (accounting for scoreboard)
   sta BomberYPos              ;   3   16
@@ -399,13 +400,13 @@ CheckP0P1Collision:           ;                   check if jet and bomber have c
 NoCollision:
   sta CXCLR                   ;   3   54*   30    clear all collision registers
 
-  ; uses 2 scanline
+  ; uses 3 scanlines
 
 ;--------------------------------------------------------
 ; Overscan (Cont.)
 ;--------------------------------------------------------
 
-  ldx #28                     ;   2   57    33      (30 - 2 = 28 scanlines)
+  ldx #27                     ;   2   57    33      (30 - 3 = 27 scanlines)
 LoopOverscan:
   dex                         ;   2   59    35
   sta WSYNC;231,258-----------;   3   61    37
