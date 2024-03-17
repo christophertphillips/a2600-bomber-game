@@ -387,17 +387,17 @@ NoInput:
 
   sta WSYNC;230---------------;   3   51    69
 
-  jsr ResetBGPF               ;   6               ; reset background (^NON-OPTIMIZED^) @UPDATE CYCLE COUNTS@
+  jsr ResetBGPF               ;   6   00          ; reset background (^NON-OPTIMIZED^)
 
 ; check collisions
 CheckP0P1Collision:           ;                   check if jet and bomber have collided
-  lda #$80                    ;   2   00
-  bit CXPPMM                  ;   3   02
-  beq NoCollision             ; 2/3   05          if no, skip
-  jsr GameOver                ;   6   07          else, call game over subroutine @CHANGE CYCLE COUNTS@
+  lda #$80                    ;   2   22
+  bit CXPPMM                  ;   3   24
+  beq NoCollision             ; 2/3   27          if no, skip
+  jsr GameOver                ;   6   29          else, call game over subroutine
 
 NoCollision:
-  sta CXCLR                   ;   3   32*   08    clear all collision registers
+  sta CXCLR                   ;   3   54*   30    clear all collision registers
 
   ; uses 2 scanline
 
@@ -405,10 +405,10 @@ NoCollision:
 ; Overscan (Cont.)
 ;--------------------------------------------------------
 
-  ldx #28                     ;   2   35    11      (30 - 2 = 28 scanlines)
+  ldx #28                     ;   2   57    33      (30 - 2 = 28 scanlines)
 LoopOverscan:
-  dex                         ;   2   37    13
-  sta WSYNC;231,258-----------;   3   39    15
+  dex                         ;   2   59    35
+  sta WSYNC;231,258-----------;   3   61    37
   bne LoopOverscan            ; 2/3   00    00
 
   jmp NextFrame               ;   3   02
