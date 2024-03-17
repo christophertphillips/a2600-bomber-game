@@ -36,6 +36,10 @@ OnesDigitOffset ds 2
 TensDigitOffset ds 2
 DigitHelperByte ds 1
 
+; playfield/background color
+BackgroundColor ds 1
+PlayfieldColor ds 1
+
 ; misc
 Random          ds 1
 
@@ -66,10 +70,10 @@ Start:
   sta BomberXPos
 
   lda #$84                    ; set background color
-  sta COLUBK
+  sta BackgroundColor
 
   lda #$C2                    ; set playfield color
-  sta COLUPF
+  sta PlayfieldColor
 
   lda #$00                    ; set plafield blocks
   sta PF2
@@ -253,39 +257,39 @@ ScoreBoardLoop:               ;                   add 20 scanlines space for sco
 
   
   ; configure background color, playfield
-  lda #$84                    ;   2   00          set background color
-  sta COLUBK                  ;   3   02
+  lda BackgroundColor         ;   3   00          set background color
+  sta COLUBK                  ;   3   03
 
-  lda #$C2                    ;   2   05          set playfield color
-  sta COLUPF                  ;   3   07
+  lda PlayfieldColor          ;   3   06          set playfield color
+  sta COLUPF                  ;   3   09
 
-  lda #$01                    ;   2   10          mirror playfield (since 'land' must be symmetric)
-  sta CTRLPF                  ;   3   12
+  lda #$01                    ;   2   12          mirror playfield (since 'land' must be symmetric)
+  sta CTRLPF                  ;   3   14
 
-  lda #$F0                    ;   2   15          set plafield blocks
-  sta PF0                     ;   3   17
-  lda #$FC                    ;   2   20
-  sta PF1                     ;   3   22
+  lda #$F0                    ;   2   17          set plafield blocks
+  sta PF0                     ;   3   19
+  lda #$FC                    ;   2   22
+  sta PF1                     ;   3   24
 
 
 
   ; draw gameplay area
-  ldx #88                     ;   2   25          (scanline 89)
+  ldx #88                     ;   2   27          (scanline 89)
 KernelLoop:
   ; draw jet sprite
-  txa                         ;   2   27          03
-  sec                         ;   2   29          05    
-  sbc JetYPos                 ;   3   31          07          subtract jet Y coord
-  cmp JET_HEIGHT              ;   3   34          10          compare to jet height
-  bcc DrawSpriteP0            ; 2/3   37          13          if result < jet height, draw with current index
-  lda #0                      ;   2   39          15          else, else, set index to 0
+  txa                         ;   2   29          03
+  sec                         ;   2   31          05    
+  sbc JetYPos                 ;   3   33          07          subtract jet Y coord
+  cmp JET_HEIGHT              ;   3   36          10          compare to jet height
+  bcc DrawSpriteP0            ; 2/3   39          13          if result < jet height, draw with current index
+  lda #0                      ;   2   41          15          else, else, set index to 0
 DrawSpriteP0:
-  tay                         ;   2   41    40    17    16
-  lda (JetSpritePtr),Y        ;   5   43    42    19    18    load bitmap data of given jet sprite
-  sta GRP0                    ;   3   48    47    24    23    set player 0 line bitmap
-  lda (JetColorPtr),Y         ;   5   51    50    27    26    load color data of given jet sprite
-  sta COLUP0                  ;   3   56    55    32    31    set player 0 line color
-  sta WSYNC;51,227------------;   3   59    58    35    34
+  tay                         ;   2   43    42    17    16
+  lda (JetSpritePtr),Y        ;   5   45    44    19    18    load bitmap data of given jet sprite
+  sta GRP0                    ;   3   50    49    24    23    set player 0 line bitmap
+  lda (JetColorPtr),Y         ;   5   53    52    27    26    load color data of given jet sprite
+  sta COLUP0                  ;   3   58    57    32    31    set player 0 line color
+  sta WSYNC;51,227------------;   3   61    60    35    34
   
   ; draw bomber sprite
   txa                         ;   2   00
