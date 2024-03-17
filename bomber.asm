@@ -395,7 +395,7 @@ CheckP0P1Collision:           ;                   check if jet and bomber have c
   jsr GameOver                ;   6   07          else, call game over subroutine @CHANGE CYCLE COUNTS@
 
 NoCollision:
-  sta CXCLR                   ;   3   24*   08    clear all collision registers
+  sta CXCLR                   ;   3   32*   08    clear all collision registers
 
   ; uses 2 scanline
 
@@ -403,10 +403,10 @@ NoCollision:
 ; Overscan (Cont.)
 ;--------------------------------------------------------
 
-  ldx #28                     ;   2   27    11      (30 - 2 = 28 scanlines)
+  ldx #28                     ;   2   35    11      (30 - 2 = 28 scanlines)
 LoopOverscan:
-  dex                         ;   2   29    13
-  sta WSYNC;231,258-----------;   3   31    15
+  dex                         ;   2   37    13
+  sta WSYNC;231,258-----------;   3   39    15
   bne LoopOverscan            ; 2/3   00    00
 
   jmp NextFrame               ;   3   02
