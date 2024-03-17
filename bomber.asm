@@ -387,6 +387,8 @@ NoInput:
 
   sta WSYNC;230---------------;   3   51    69
 
+  jsr ResetBGPF               ;   6               ; reset background (^NON-OPTIMIZED^) @UPDATE CYCLE COUNTS@
+
 ; check collisions
 CheckP0P1Collision:           ;                   check if jet and bomber have collided
   lda #$80                    ;   2   00
@@ -415,7 +417,7 @@ LoopOverscan:
 ; Subroutines
 ;--------------------------------------------------------
 
-  org $FF1E                   ; set at end of rom
+  org $FF15                   ; set at end of rom
 
 GetScoreOffsets subroutine
   ldx #1
@@ -443,6 +445,14 @@ GetScoreOffsets subroutine
   dex
   bpl .GetScoreOffsetsLoop
   rts
+
+  ; game over subroutine
+ResetBGPF subroutine           ; (16 cycles total)
+  lda #$84                    ; 2 set background color
+  sta BackgroundColor         ; 3
+  lda #$C2                    ; 2 set playfield color
+  sta PlayfieldColor          ; 3
+  rts                         ; 6
 
   ; game over subroutine
 GameOver subroutine           ; (19 cycles total)
