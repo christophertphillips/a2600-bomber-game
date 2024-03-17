@@ -387,17 +387,11 @@ NoInput:
 CheckP0P1Collision:           ;                   check if jet and bomber have collided
   lda #$80                    ;   2   00
   bit CXPPMM                  ;   3   02
-  beq CheckP0PFCollision      ; 2/3   05          if no, skip
+  beq NoCollision             ; 2/3   05          if no, skip
   jsr GameOver                ;   6   07          else, call game over subroutine
 
-CheckP0PFCollision:           ;                   check if jet and playfield have collided
-  lda #$80                    ;   2   08   
-  bit CXP0FB                  ;   3   10
-  beq NoCollision             ; 2/3   13          if no, skip
-  jsr GameOver                ;   6   15          else, call game over subroutine
-
 NoCollision:
-  sta CXCLR                   ;   3   16          clear all collision registers
+  sta CXCLR                   ;   3   24*   08    clear all collision registers
 
   ; uses 2 scanline
 
@@ -405,11 +399,11 @@ NoCollision:
 ; Overscan (Cont.)
 ;--------------------------------------------------------
 
-  ldx #28                     ;   2   19          (30 - 2 = 28 scanlines)
+  ldx #28                     ;   2   27    11      (30 - 2 = 28 scanlines)
 LoopOverscan:
-  dex                         ;   2   21  03
-  sta WSYNC;231,258-----------;   3   23  05
-  bne LoopOverscan            ; 2/3   00  00
+  dex                         ;   2   29    13
+  sta WSYNC;231,258-----------;   3   31    15
+  bne LoopOverscan            ; 2/3   00    00
 
   jmp NextFrame               ;   3   02
 
@@ -447,10 +441,10 @@ GetScoreOffsets subroutine
   rts
 
   ; game over subroutine
-GameOver subroutine
-  lda #$40
-  sta COLUBK
-  rts
+GameOver subroutine           ; (17 cycles total)
+  lda #$40                    ; 2
+  sta COLUBK                  ; 3
+  rts                         ; 6
 
   ; LFSR subroutine
 LFSR subroutine
