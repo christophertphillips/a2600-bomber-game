@@ -330,6 +330,8 @@ CheckBomberYPosition:
   cmp #247                    ;   2   10          check if bomber if fully off-screen
   sta WSYNC                   ;                   @UPDATE CYCLE COUNTS@
   bne DecrementBomberYPos     ; 2/3   12          if so, directly decrement its y-position
+  inc Score                   ;   5               increment score
+  inc Timer                   ;   5               increment timer
   lda #89                     ;   2   14          else, reset its y-position at top of screen (accounting for scoreboard)
   sta BomberYPos              ;   3   16
   jsr LFSR                    ;   6   19          also, reset its x-position with a random value
