@@ -326,6 +326,7 @@ DrawSpriteP1:
 
 ; update bomber position
 CheckBomberYPosition:
+  sta WSYNC
   lda BomberYPos              ;   3   07
   cmp #247                    ;   2   10          check if bomber if fully off-screen
   sta WSYNC;229---------------;   3   12          @UPDATE CYCLE COUNTS@
@@ -346,6 +347,7 @@ DecrementBomberYPos:
   dec BomberYPos              ;   5   00    00
 
 ResetJetSprite:
+  sta WSYNC
   lda #<JetSprite             ;   2   05          set jet sprite pointer to 'normal/non-turning' sprite
   sta JetSpritePtr            ;   3   07
   lda #>JetSprite             ;   2   10
@@ -353,18 +355,21 @@ ResetJetSprite:
 
 ; process input 
 CheckP0Up:                    ; check joy = up
+  sta WSYNC
   lda #$10                    ;   2   15
   bit SWCHA                   ;   4   17
   bne CheckP0Down             ; 2/3   21    21    if joy != up, skip
   inc JetYPos                 ;   5         23    else, increment JetYPos
 
 CheckP0Down:                  ; check joy = down
+  sta WSYNC
   lda #$20                    ;   2   24    28
   bit SWCHA                   ;   4   26    30
   bne CheckP0Left             ; 2/3   30    34    if joy != down, skip
   dec JetYPos                 ;   5               if down, increment JetYPos
 
 CheckP0Left:                  ; check joy = left
+  sta WSYNC
   lda #$40                    ;   2   33    37  
   bit SWCHA                   ;   4   35    39
   bne CheckP0Right            ; 2/3   39    43    if joy != left, skip
@@ -376,6 +381,7 @@ CheckP0Left:                  ; check joy = left
   sta JetSpritePtr+1          ;   3         57
 
 CheckP0Right:                 ; check joy = right
+  sta WSYNC
   lda #$80                    ;   2   42    60
   bit SWCHA                   ;   4   44    62
   bne NoInput                 ; 2/3   48    66    if joy != right, skip
@@ -394,21 +400,23 @@ NoInput:
 
 ; check collisions
 CheckP0P1Collision:           ;                   check if jet and bomber have collided
+  sta WSYNC
   lda #$80                    ;   2   22
   bit CXPPMM                  ;   3   24
   beq NoCollision             ; 2/3   27          if no, skip
   jsr GameOver                ;   6   29          else, call game over subroutine
 
 NoCollision:
+  sta WSYNC
   sta CXCLR                   ;   3   54*   30    clear all collision registers
 
-  ; uses 3 scanlines
+  ; uses 11 scanlines
 
 ;--------------------------------------------------------
 ; Overscan (Cont.)
 ;--------------------------------------------------------
 
-  ldx #27                     ;   2   57    33      (30 - 3 = 27 scanlines)
+  ldx #19                     ;   2   57    33      (30 - 11 = 19 scanlines)
 LoopOverscan:
   dex                         ;   2   59    35
   sta WSYNC;232,258-----------;   3   61    37
