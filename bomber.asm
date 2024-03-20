@@ -398,15 +398,15 @@ NoInput:
 
 ; check collisions
 CheckP0P1Collision:           ;                   check if jet and bomber have collided
-  sta WSYNC;238---------------;   3   22
+  sta WSYNC;238---------------;   3   22*
   lda #$80                    ;   2   00
   bit CXPPMM                  ;   3   02
   beq NoCollision             ; 2/3   05          if no, skip
   jsr GameOver                ;   6   07          else, call game over subroutine
 
 NoCollision:
-  sta WSYNC;239---------------;
-  sta CXCLR                   ;   3   54*   30    clear all collision registers
+  sta WSYNC;239---------------;   3   32*   08
+  sta CXCLR                   ;   3   00    00    clear all collision registers
 
   ; uses 11 scanlines
 
