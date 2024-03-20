@@ -369,16 +369,16 @@ CheckP0Down:                  ; check joy = down
   dec JetYPos                 ;   5   08          if down, increment JetYPos
 
 CheckP0Left:                  ; check joy = left
-  sta WSYNC;235---------------;
-  lda #$40                    ;   2   33    37  
-  bit SWCHA                   ;   4   35    39
-  bne CheckP0Right            ; 2/3   39    43    if joy != left, skip
-  dec JetXPos                 ;   5         45    if left, decrement JetXPos
+  sta WSYNC;235---------------;   3   13    09
+  lda #$40                    ;   2   00    00  
+  bit SWCHA                   ;   4   02    
+  bne CheckP0Right            ; 2/3   06          if joy != left, skip
+  dec JetXPos                 ;   5   08          if left, decrement JetXPos
 
-  lda #<JetSpriteTurn         ;   2         50    set jet sprite pointer to 'turning' sprite
-  sta JetSpritePtr            ;   3         52
-  lda #>JetSpriteTurn         ;   2         55
-  sta JetSpritePtr+1          ;   3         57
+  lda #<JetSpriteTurn         ;   2   13          set jet sprite pointer to 'turning' sprite
+  sta JetSpritePtr            ;   3   15
+  lda #>JetSpriteTurn         ;   2   18
+  sta JetSpritePtr+1          ;   3   20
 
 CheckP0Right:                 ; check joy = right
   sta WSYNC;236---------------;
