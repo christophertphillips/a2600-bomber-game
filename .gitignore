@@ -1,3 +1,4 @@
 cart.*
 *.h
 Makefile
+.DS_Store
