@@ -393,10 +393,8 @@ CheckP0Right:                 ; check joy = right
   sta JetSpritePtr+1          ;   3   20
 
 NoInput:
-
-  sta WSYNC;237---------------;   3   51    69
-
-  jsr ResetBGPF               ;   6   00          ; reset background (^NON-OPTIMIZED^)
+  sta WSYNC;237---------------;   3   23    09
+  jsr ResetBGPF               ;   6   00    00    ; reset background
 
 ; check collisions
 CheckP0P1Collision:           ;                   check if jet and bomber have collided
