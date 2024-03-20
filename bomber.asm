@@ -355,11 +355,11 @@ ResetJetSprite:
 
 ; process input 
 CheckP0Up:                    ; check joy = up
-  sta WSYNC;233---------------;
-  lda #$10                    ;   2   15
-  bit SWCHA                   ;   4   17
-  bne CheckP0Down             ; 2/3   21    21    if joy != up, skip
-  inc JetYPos                 ;   5         23    else, increment JetYPos
+  sta WSYNC;233---------------;   3   10
+  lda #$10                    ;   2   00
+  bit SWCHA                   ;   4   02
+  bne CheckP0Down             ; 2/3   06          if joy != up, skip
+  inc JetYPos                 ;   5   08          else, increment JetYPos
 
 CheckP0Down:                  ; check joy = down
   sta WSYNC;234---------------;
