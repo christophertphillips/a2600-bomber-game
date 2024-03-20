@@ -362,11 +362,11 @@ CheckP0Up:                    ; check joy = up
   inc JetYPos                 ;   5   08          else, increment JetYPos
 
 CheckP0Down:                  ; check joy = down
-  sta WSYNC;234---------------;
-  lda #$20                    ;   2   24    28
-  bit SWCHA                   ;   4   26    30
-  bne CheckP0Left             ; 2/3   30    34    if joy != down, skip
-  dec JetYPos                 ;   5               if down, increment JetYPos
+  sta WSYNC;234---------------;   3   13    09
+  lda #$20                    ;   2   00    00
+  bit SWCHA                   ;   4   02 
+  bne CheckP0Left             ; 2/3   06          if joy != down, skip
+  dec JetYPos                 ;   5   08          if down, increment JetYPos
 
 CheckP0Left:                  ; check joy = left
   sta WSYNC;235---------------;
