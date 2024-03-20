@@ -329,7 +329,7 @@ CheckBomberYPosition:
   sta WSYNC;229---------------;   3   07
   lda BomberYPos              ;   3   00
   cmp #247                    ;   2   03          check if bomber if fully off-screen
-  sta WSYNC;230---------------;   3   05          @UPDATE CYCLE COUNTS@
+  sta WSYNC;230---------------;   3   05
   bne DecrementBomberYPos     ; 2/3   00          if so, directly decrement its y-position
   inc Score                   ;   5   02            increment score
   inc Timer                   ;   5   07            increment timer
@@ -347,11 +347,11 @@ DecrementBomberYPos:
   dec BomberYPos              ;   5   00    00
 
 ResetJetSprite:
-  sta WSYNC;232---------------;
-  lda #<JetSprite             ;   2   05          set jet sprite pointer to 'normal/non-turning' sprite
-  sta JetSpritePtr            ;   3   07
-  lda #>JetSprite             ;   2   10
-  sta JetSpritePtr+1          ;   3   12
+  sta WSYNC;232---------------;   3   05
+  lda #<JetSprite             ;   2   00          set jet sprite pointer to 'normal/non-turning' sprite
+  sta JetSpritePtr            ;   3   02
+  lda #>JetSprite             ;   2   05
+  sta JetSpritePtr+1          ;   3   07
 
 ; process input 
 CheckP0Up:                    ; check joy = up
