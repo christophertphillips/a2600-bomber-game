@@ -398,11 +398,11 @@ NoInput:
 
 ; check collisions
 CheckP0P1Collision:           ;                   check if jet and bomber have collided
-  sta WSYNC;238---------------;
-  lda #$80                    ;   2   22
-  bit CXPPMM                  ;   3   24
-  beq NoCollision             ; 2/3   27          if no, skip
-  jsr GameOver                ;   6   29          else, call game over subroutine
+  sta WSYNC;238---------------;   3   22
+  lda #$80                    ;   2   00
+  bit CXPPMM                  ;   3   02
+  beq NoCollision             ; 2/3   05          if no, skip
+  jsr GameOver                ;   6   07          else, call game over subroutine
 
 NoCollision:
   sta WSYNC;239---------------;
