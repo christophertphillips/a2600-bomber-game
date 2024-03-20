@@ -326,10 +326,10 @@ DrawSpriteP1:
 
 ; update bomber position
 CheckBomberYPosition:
-  sta WSYNC;229---------------;
-  lda BomberYPos              ;   3   07
-  cmp #247                    ;   2   10          check if bomber if fully off-screen
-  sta WSYNC;230---------------;   3   12          @UPDATE CYCLE COUNTS@
+  sta WSYNC;229---------------;   3   07
+  lda BomberYPos              ;   3   00
+  cmp #247                    ;   2   03          check if bomber if fully off-screen
+  sta WSYNC;230---------------;   3   05          @UPDATE CYCLE COUNTS@
   bne DecrementBomberYPos     ; 2/3   00          if so, directly decrement its y-position
   inc Score                   ;   5   02            increment score
   inc Timer                   ;   5   07            increment timer
