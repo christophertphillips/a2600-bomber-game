@@ -369,14 +369,14 @@ CheckP0Down:                  ; check joy = down
   lda #$20                    ;   2   00    00
   bit SWCHA                   ;   4   02 
   bne CheckP0Left             ; 2/3   06          if joy != down, skip
-  lda JetYPos                 ;                   check if jet is at bottom of screen
-  cmp #0                      ;
-  bmi CheckP0Left             ;                   if yes, skip
-  dec JetYPos                 ;   5   08          if down, increment JetYPos
+  lda JetYPos                 ;   3   08         check if jet is at bottom of screen
+  cmp #0                      ;   2   11
+  bmi CheckP0Left             ; 2/3   13          if yes, skip
+  dec JetYPos                 ;   5   15          if down, increment JetYPos
 
 CheckP0Left:                  ; check joy = left
-  sta WSYNC;235---------------;   3   13    09
-  lda #$40                    ;   2   00    00  
+  sta WSYNC;235---------------;   3   20    09    16
+  lda #$40                    ;   2   00    00    00
   bit SWCHA                   ;   4   02    
   bne CheckP0Right            ; 2/3   06          if joy != left, skip
   dec JetXPos                 ;   5   08          if left, decrement JetXPos
