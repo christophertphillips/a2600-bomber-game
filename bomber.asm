@@ -326,10 +326,10 @@ DrawSpriteP1:
 
 ; update bomber position
 CheckBomberYPosition:
-  sta WSYNC
+  sta WSYNC;229---------------;
   lda BomberYPos              ;   3   07
   cmp #247                    ;   2   10          check if bomber if fully off-screen
-  sta WSYNC;229---------------;   3   12          @UPDATE CYCLE COUNTS@
+  sta WSYNC;230---------------;   3   12          @UPDATE CYCLE COUNTS@
   bne DecrementBomberYPos     ; 2/3   00          if so, directly decrement its y-position
   inc Score                   ;   5   02            increment score
   inc Timer                   ;   5   07            increment timer
@@ -343,11 +343,11 @@ CheckBomberYPosition:
   sta BomberXPos              ;   3   67
 
 DecrementBomberYPos:
-  sta WSYNC;230---------------;   3   70    03
+  sta WSYNC;231---------------;   3   70    03
   dec BomberYPos              ;   5   00    00
 
 ResetJetSprite:
-  sta WSYNC
+  sta WSYNC;232---------------;
   lda #<JetSprite             ;   2   05          set jet sprite pointer to 'normal/non-turning' sprite
   sta JetSpritePtr            ;   3   07
   lda #>JetSprite             ;   2   10
@@ -355,21 +355,21 @@ ResetJetSprite:
 
 ; process input 
 CheckP0Up:                    ; check joy = up
-  sta WSYNC
+  sta WSYNC;233---------------;
   lda #$10                    ;   2   15
   bit SWCHA                   ;   4   17
   bne CheckP0Down             ; 2/3   21    21    if joy != up, skip
   inc JetYPos                 ;   5         23    else, increment JetYPos
 
 CheckP0Down:                  ; check joy = down
-  sta WSYNC
+  sta WSYNC;234---------------;
   lda #$20                    ;   2   24    28
   bit SWCHA                   ;   4   26    30
   bne CheckP0Left             ; 2/3   30    34    if joy != down, skip
   dec JetYPos                 ;   5               if down, increment JetYPos
 
 CheckP0Left:                  ; check joy = left
-  sta WSYNC
+  sta WSYNC;235---------------;
   lda #$40                    ;   2   33    37  
   bit SWCHA                   ;   4   35    39
   bne CheckP0Right            ; 2/3   39    43    if joy != left, skip
@@ -381,7 +381,7 @@ CheckP0Left:                  ; check joy = left
   sta JetSpritePtr+1          ;   3         57
 
 CheckP0Right:                 ; check joy = right
-  sta WSYNC
+  sta WSYNC;236---------------;
   lda #$80                    ;   2   42    60
   bit SWCHA                   ;   4   44    62
   bne NoInput                 ; 2/3   48    66    if joy != right, skip
@@ -394,20 +394,20 @@ CheckP0Right:                 ; check joy = right
 
 NoInput:
 
-  sta WSYNC;231---------------;   3   51    69
+  sta WSYNC;237---------------;   3   51    69
 
   jsr ResetBGPF               ;   6   00          ; reset background (^NON-OPTIMIZED^)
 
 ; check collisions
 CheckP0P1Collision:           ;                   check if jet and bomber have collided
-  sta WSYNC
+  sta WSYNC;238---------------;
   lda #$80                    ;   2   22
   bit CXPPMM                  ;   3   24
   beq NoCollision             ; 2/3   27          if no, skip
   jsr GameOver                ;   6   29          else, call game over subroutine
 
 NoCollision:
-  sta WSYNC
+  sta WSYNC;239---------------;
   sta CXCLR                   ;   3   54*   30    clear all collision registers
 
   ; uses 11 scanlines
@@ -419,7 +419,7 @@ NoCollision:
   ldx #19                     ;   2   57    33      (30 - 11 = 19 scanlines)
 LoopOverscan:
   dex                         ;   2   59    35
-  sta WSYNC;232,258-----------;   3   61    37
+  sta WSYNC;240,258-----------;   3   61    37
   bne LoopOverscan            ; 2/3   00    00
 
   jmp NextFrame               ;   3   02
