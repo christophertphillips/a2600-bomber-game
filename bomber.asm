@@ -394,19 +394,19 @@ CheckP0Right:                 ; check joy = right
   lda #$80                    ;   2   00    00    00
   bit SWCHA                   ;   4   02
   bne NoInput                 ; 2/3   06          if joy != right, skip
-  lda JetXPos                 ;
-  cmp #113                    ;
-  bpl NoInput                 ;
-  inc JetXPos                 ;   5   08          else, increment JetXPos
+  lda JetXPos                 ;   3   08
+  cmp #113                    ;   2   11
+  bpl NoInput                 ; 2/3   13
+  inc JetXPos                 ;   5   15          else, increment JetXPos
 
-  lda #<JetSpriteTurn         ;   2   13          set jet sprite pointer to 'turning' sprite
-  sta JetSpritePtr            ;   3   15
-  lda #>JetSpriteTurn         ;   2   18
-  sta JetSpritePtr+1          ;   3   20
+  lda #<JetSpriteTurn         ;   2   20          set jet sprite pointer to 'turning' sprite
+  sta JetSpritePtr            ;   3   22
+  lda #>JetSpriteTurn         ;   2   25
+  sta JetSpritePtr+1          ;   3   27
 
 NoInput:
-  sta WSYNC;237---------------;   3   23    09
-  jsr ResetBGPF               ;   6   00    00    ; reset background
+  sta WSYNC;237---------------;   3   30    09    16
+  jsr ResetBGPF               ;   6   00    00    00    reset background
 
 ; check collisions
 CheckP0P1Collision:           ;                   check if jet and bomber have collided
