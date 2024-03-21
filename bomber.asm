@@ -379,6 +379,9 @@ CheckP0Left:                  ; check joy = left
   lda #$40                    ;   2   00    00    00
   bit SWCHA                   ;   4   02    
   bne CheckP0Right            ; 2/3   06          if joy != left, skip
+  lda JetXPos                 ;
+  cmp #41                     ;
+  bmi CheckP0Right            ;
   dec JetXPos                 ;   5   08          if left, decrement JetXPos
 
   lda #<JetSpriteTurn         ;   2   13          set jet sprite pointer to 'turning' sprite
