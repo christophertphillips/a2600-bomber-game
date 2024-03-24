@@ -141,11 +141,13 @@ NextFrame:
 ;--------------------------------------------------------
 
   ; set jet horizontal position
+  sta WSYNC;------------------;
   lda JetXPos                 ;   3   05    load GRP0 position from memory
   ldx #0                      ;   2   08    indicate GRP0
   jsr SetObjectXPos           ;   6   10    call subroutine to set GRP0 horizontal position (spans two scanlines)
 
   ; set bomber horizontal position
+  sta WSYNC;------------------;
   lda BomberXPos              ;   3   06*   load GRP1 position from memory
   ldx #1                      ;   2   09    indicate GRP1
   jsr SetObjectXPos           ;   6   11    call subroutine to set GRP1 horizontal position (spans two scanlines)
@@ -155,6 +157,7 @@ NextFrame:
   sta HMOVE                   ;   3   00    perform fine-tune offset
 
   ; reset graphics, playfield, playfield reflection
+  sta WSYNC;------------------;
   lda #0                      ;   2   03
   sta GRP0                    ;   3   05    disable sprites
   sta GRP1                    ;   3   08 
@@ -174,13 +177,13 @@ NextFrame:
   jsr GetScoreOffsets         ;   6   00    (spans a scanline)
   sta WSYNC;7-----------------;   3   00
 
-  ; uses 8 scanlines
+  ; uses 11 scanlines
 
 ;--------------------------------------------------------
 ; VBLANK
 ;--------------------------------------------------------
 
-  ldx #29
+  ldx #26                     ;             (37 - 11 = 26 scanlines)
 LoopVBlank:
   dex
   sta WSYNC;8,36--------------
