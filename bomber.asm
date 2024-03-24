@@ -141,41 +141,41 @@ NextFrame:
 ;--------------------------------------------------------
 
   ; set jet horizontal position
-  sta WSYNC;------------------;
-  lda JetXPos                 ;   3   05    load GRP0 position from memory
-  ldx #0                      ;   2   08    indicate GRP0
-  jsr SetObjectXPos           ;   6   10    call subroutine to set GRP0 horizontal position (spans two scanlines)
+  sta WSYNC;0-----------------;   3   05
+  lda JetXPos                 ;   3   00    load GRP0 position from memory
+  ldx #0                      ;   2   03    indicate GRP0
+  jsr SetObjectXPos           ;   6+  5    call subroutine to set GRP0 horizontal position (spans two scanlines)
 
   ; set bomber horizontal position
-  sta WSYNC;------------------;
-  lda BomberXPos              ;   3   06*   load GRP1 position from memory
-  ldx #1                      ;   2   09    indicate GRP1
-  jsr SetObjectXPos           ;   6   11    call subroutine to set GRP1 horizontal position (spans two scanlines)
+  sta WSYNC;3-----------------;   3   06*
+  lda BomberXPos              ;   3   00   load GRP1 position from memory
+  ldx #1                      ;   2   03    indicate GRP1
+  jsr SetObjectXPos           ;   6+  05    call subroutine to set GRP1 horizontal position (spans two scanlines)
 
   ; perform fine-tune horizontal offsets
-  sta WSYNC;4-----------------;   3   06*   'carriage return' before HMOVE
+  sta WSYNC;6-----------------;   3   06*   'carriage return' before HMOVE
   sta HMOVE                   ;   3   00    perform fine-tune offset
 
   ; reset graphics, playfield, playfield reflection
-  sta WSYNC;------------------;
-  lda #0                      ;   2   03
-  sta GRP0                    ;   3   05    disable sprites
-  sta GRP1                    ;   3   08 
-  sta PF0                     ;   3   11    disable playfield
-  sta PF1                     ;   3   14
-  sta PF2                     ;   3   17
+  sta WSYNC;7-----------------;   3   03
+  lda #0                      ;   2   00
+  sta GRP0                    ;   3   02    disable sprites
+  sta GRP1                    ;   3   05 
+  sta PF0                     ;   3   08    disable playfield
+  sta PF1                     ;   3   11
+  sta PF2                     ;   3   14
   
-  sta CTRLPF                  ;   3   20    repeat playfield (since score/timer must be asymmetric)
+  sta CTRLPF                  ;   3   17    repeat playfield (since score/timer must be asymmetric)
   
-  sta COLUBK                  ;   3   23    set background to black
+  sta COLUBK                  ;   3   20    set background to black
 
-  lda #$1F                    ;   2   26    set playfield (digits) to yellow
-  sta COLUPF                  ;   3   28
+  lda #$1F                    ;   2   23    set playfield (digits) to yellow
+  sta COLUPF                  ;   3   25
 
   ; calculate score offsets
-  sta WSYNC;5-----------------;   3   31
+  sta WSYNC;8-----------------;   3   28
   jsr GetScoreOffsets         ;   6   00    (spans a scanline)
-  sta WSYNC;7-----------------;   3   00
+  sta WSYNC;10----------------;   3   43
 
   ; uses 11 scanlines
 
