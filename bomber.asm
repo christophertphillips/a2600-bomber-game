@@ -329,18 +329,22 @@ CheckBomberYPosition:
   sta WSYNC;229---------------;   3   07
   lda BomberYPos              ;   3   00
   cmp #247                    ;   2   03          check if bomber if fully off-screen
-  sta WSYNC;230---------------;   3   05
-  bne DecrementBomberYPos     ; 2/3   00          if so, directly decrement its y-position
+  bne SkipBomberReset         ; 2/3   00          if so, directly decrement its y-position
   inc Score                   ;   5   02            increment score
   inc Timer                   ;   5   07            increment timer
   lda #89                     ;   2   12          else, reset its y-position at top of screen (accounting for scoreboard)
   sta BomberYPos              ;   3   14
   jsr LFSR                    ;   6   17          also, reset its x-position with a random value
+  sta WSYNC;230(a)------------;
   lsr                         ;   2   59*         divide random postion by 2
   lsr                         ;   2   61          divide random postion by 2
   clc                         ;   2   63          add an offset of 40
   adc #40                     ;   2   65
   sta BomberXPos              ;   3   67
+  jmp DecrementBomberYPos
+
+SkipBomberReset:
+  sta WSYNC;230(b)------------;
 
 DecrementBomberYPos:
   sta WSYNC;231---------------;   3   70    03
