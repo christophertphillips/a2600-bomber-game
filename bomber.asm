@@ -104,10 +104,10 @@ Start:
   lda #$D4                    ; set random seed value
   sta Random
 
-  lda #$69                    ; set score value (in BCD)
+  lda #0                      ; initialize score
   sta Score
 
-  lda #$25                    ; set timer value (in BCD)
+  lda #0                      ; initialize timer
   sta Timer
 
 JET_HEIGHT = 9
@@ -330,8 +330,6 @@ CheckBomberYPosition:
   lda BomberYPos              ;   3   00
   cmp #247                    ;   2   03          check if bomber if fully off-screen
   bne SkipBomberReset         ; 2/3   05          if so, directly decrement its y-position
-  inc Score                   ;   5   07            increment score
-  inc Timer                   ;   5   12            increment timer
   lda #89                     ;   2   17          else, reset its y-position at top of screen (accounting for scoreboard)
   sta BomberYPos              ;   3   19
   jsr LFSR                    ;   6   22          also, reset its x-position with a random value
@@ -341,6 +339,14 @@ CheckBomberYPosition:
   clc                         ;   2   04          add an offset of 40
   adc #40                     ;   2   06
   sta BomberXPos              ;   3   08
+  sed                         ;                   activate BCD mode
+  lda Score                   ;                   increment score
+  adc #1                      ;
+  sta Score                   ;
+  lda Timer                   ;                   increment timer
+  adc #1                      ;
+  sta Timer                   ;
+  cld                         ;                   deactivate BCD mode
   jmp DecrementBomberYPos     ;   3   11
 
 SkipBomberReset:
