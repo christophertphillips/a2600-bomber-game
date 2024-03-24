@@ -419,29 +419,29 @@ CheckP0Right:                 ; check joy = right
   sta JetSpritePtr+1          ;   3   27
 
 CheckP0Button:
-  sta WSYNC;------------------;
-  lda #$80
-  bit INPT4
-  bne NoInput
-  lda JetXPos
-  sta MissileXPos
-  lda JetYPos
-  sta MissileYPos
+  sta WSYNC;237---------------;   3   30    09    16
+  lda #$80                    ;   2   00    00    00
+  bit INPT4                   ;   3   02
+  bne NoInput                 ; 2/3   05
+  lda JetXPos                 ;   3   07
+  sta MissileXPos             ;   3   10
+  lda JetYPos                 ;   3   13
+  sta MissileYPos             ;   3   16
 
 NoInput:
-  sta WSYNC;237---------------;   3   30    09    16
-  jsr ResetBGPF               ;   6   00    00    00    reset background
+  sta WSYNC;238---------------;   3   19    08    
+  jsr ResetBGPF               ;   6   00    00    reset background
 
 ; check collisions
 CheckP0P1Collision:           ;                   check if jet and bomber have collided
-  sta WSYNC;238---------------;   3   22*
+  sta WSYNC;239---------------;   3   22*
   lda #$80                    ;   2   00
   bit CXPPMM                  ;   3   02
   beq NoCollision             ; 2/3   05          if no, skip
   jsr GameOver                ;   6   07          else, call game over subroutine
 
 NoCollision:
-  sta WSYNC;239---------------;   3   32*   08
+  sta WSYNC;240---------------;   3   32*   08
   sta CXCLR                   ;   3   00    00    clear all collision registers
 
   ; uses 12 scanlines
@@ -453,7 +453,7 @@ NoCollision:
   ldx #18                     ;   2   57    33      (30 - 12 = 18 scanlines)
 LoopOverscan:
   dex                         ;   2   59    35
-  sta WSYNC;240,258-----------;   3   61    37
+  sta WSYNC;241,258-----------;   3   61    37
   bne LoopOverscan            ; 2/3   00    00
 
   jmp NextFrame               ;   3   02
