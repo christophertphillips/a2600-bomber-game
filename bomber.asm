@@ -343,9 +343,11 @@ CheckBomberYPosition:
   sta BomberXPos              ;   3   08
   sed                         ;   2   11          activate BCD mode
   lda Score                   ;   3   13          increment score
+  clc                         ;   2
   adc #1                      ;   2   16
   sta Score                   ;   3   18
   lda Timer                   ;   3   21          increment timer
+  clc                         ;   2
   adc #1                      ;   2   24
   sta Timer                   ;   3   26
   cld                         ;   2   29          deactivate BCD mode
