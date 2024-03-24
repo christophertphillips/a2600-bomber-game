@@ -20,6 +20,8 @@ JetXPos         ds 1
 JetYPos         ds 1
 BomberXPos      ds 1
 BomberYPos      ds 1
+MissileXPos     ds 1
+MissileYPos     ds 1
 
 ; sprite graphics
 JetSpritePtr    ds 2
