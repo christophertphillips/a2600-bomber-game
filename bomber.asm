@@ -423,6 +423,10 @@ CheckP0Button:
   lda #$80
   bit INPT4
   bne NoInput
+  lda JetXPos
+  sta MissileXPos
+  lda JetYPos
+  sta MissileYPos
 
 NoInput:
   sta WSYNC;237---------------;   3   30    09    16
