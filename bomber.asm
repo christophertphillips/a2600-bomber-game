@@ -343,15 +343,15 @@ CheckBomberYPosition:
   sta BomberXPos              ;   3   08
   sed                         ;   2   11          activate BCD mode
   lda Score                   ;   3   13          increment score
-  clc                         ;   2
-  adc #1                      ;   2   16
-  sta Score                   ;   3   18
-  lda Timer                   ;   3   21          increment timer
-  clc                         ;   2
-  adc #1                      ;   2   24
-  sta Timer                   ;   3   26
-  cld                         ;   2   29          deactivate BCD mode
-  jmp DecrementBomberYPos     ;   3   31
+  clc                         ;   2   16
+  adc #1                      ;   2   18
+  sta Score                   ;   3   20
+  lda Timer                   ;   3   23          increment timer
+  clc                         ;   2   26
+  adc #1                      ;   2   28
+  sta Timer                   ;   3   30
+  cld                         ;   2   33          deactivate BCD mode
+  jmp DecrementBomberYPos     ;   3   35
 
 SkipBomberReset:
   sta WSYNC;230(b)------------;   3         08
