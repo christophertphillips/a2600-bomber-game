@@ -407,7 +407,7 @@ CheckP0Right:                 ; check joy = right
   sta WSYNC;236---------------;   3   30    09    16
   lda #$80                    ;   2   00    00    00
   bit SWCHA                   ;   4   02
-  bne NoInput                 ; 2/3   06          if joy != right, skip
+  bne CheckP0Button           ; 2/3   06          if joy != right, skip
   lda JetXPos                 ;   3   08
   cmp #113                    ;   2   11
   bpl NoInput                 ; 2/3   13
@@ -417,6 +417,12 @@ CheckP0Right:                 ; check joy = right
   sta JetSpritePtr            ;   3   22
   lda #>JetSpriteTurn         ;   2   25
   sta JetSpritePtr+1          ;   3   27
+
+CheckP0Button:
+  sta WSYNC;------------------;
+  lda #$80
+  bit INPT4
+  bne NoInput
 
 NoInput:
   sta WSYNC;237---------------;   3   30    09    16
@@ -434,13 +440,13 @@ NoCollision:
   sta WSYNC;239---------------;   3   32*   08
   sta CXCLR                   ;   3   00    00    clear all collision registers
 
-  ; uses 11 scanlines
+  ; uses 12 scanlines
 
 ;--------------------------------------------------------
 ; Overscan (Cont.)
 ;--------------------------------------------------------
 
-  ldx #19                     ;   2   57    33      (30 - 11 = 19 scanlines)
+  ldx #18                     ;   2   57    33      (30 - 12 = 18 scanlines)
 LoopOverscan:
   dex                         ;   2   59    35
   sta WSYNC;240,258-----------;   3   61    37
