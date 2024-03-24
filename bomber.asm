@@ -330,30 +330,30 @@ CheckBomberYPosition:
   lda BomberYPos              ;   3   00
   cmp #247                    ;   2   03          check if bomber if fully off-screen
   bne SkipBomberReset         ; 2/3   05          if so, directly decrement its y-position
-  lda #89                     ;   2   17          else, reset its y-position at top of screen (accounting for scoreboard)
-  sta BomberYPos              ;   3   19
-  jsr LFSR                    ;   6   22          also, reset its x-position with a random value
-  sta WSYNC;230(a)------------;   3   64*
+  lda #89                     ;   2   07          else, reset its y-position at top of screen (accounting for scoreboard)
+  sta BomberYPos              ;   3   09
+  jsr LFSR                    ;   6   12          also, reset its x-position with a random value
+  sta WSYNC;230(a)------------;   3   54*
   lsr                         ;   2   00          divide random postion by 2
   lsr                         ;   2   02          divide random postion by 2
   clc                         ;   2   04          add an offset of 40
   adc #40                     ;   2   06
   sta BomberXPos              ;   3   08
-  sed                         ;                   activate BCD mode
-  lda Score                   ;                   increment score
-  adc #1                      ;
-  sta Score                   ;
-  lda Timer                   ;                   increment timer
-  adc #1                      ;
-  sta Timer                   ;
-  cld                         ;                   deactivate BCD mode
-  jmp DecrementBomberYPos     ;   3   11
+  sed                         ;   2   11          activate BCD mode
+  lda Score                   ;   3   13          increment score
+  adc #1                      ;   2   16
+  sta Score                   ;   3   18
+  lda Timer                   ;   3   21          increment timer
+  adc #1                      ;   2   24
+  sta Timer                   ;   3   26
+  cld                         ;   2   29          deactivate BCD mode
+  jmp DecrementBomberYPos     ;   3   31
 
 SkipBomberReset:
   sta WSYNC;230(b)------------;   3         08
 
 DecrementBomberYPos:
-  sta WSYNC;231---------------;   3   14    00
+  sta WSYNC;231---------------;   3   34    00
   dec BomberYPos              ;   5   00    00
 
 ResetJetSprite:
