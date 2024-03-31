@@ -106,10 +106,8 @@ Start:
   lda #$D4                    ; set random seed value
   sta Random
 
-  lda #0                      ; initialize score
+  lda #0                      ; initialize score and timer
   sta Score
-
-  lda #0                      ; initialize timer
   sta Timer
 
 JET_HEIGHT = 9
@@ -163,7 +161,6 @@ NextFrame:
   sta GRP1                    ;   3   05 
   sta PF0                     ;   3   08    disable playfield
   sta PF1                     ;   3   11
-  sta PF2                     ;   3   14
   
   sta CTRLPF                  ;   3   17    repeat playfield (since score/timer must be asymmetric)
   
