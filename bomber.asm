@@ -150,6 +150,12 @@ NextFrame:
   ldx #1                      ;   2   03    indicate GRP1
   jsr SetObjectXPos           ;   6+  05    call subroutine to set GRP1 horizontal position (spans two scanlines)
 
+  ; set missile horizontal position
+  sta WSYNC;3-----------------;   3   06*
+  lda MissileXPos             ;   3   00    load M0 position from RAM
+  ldx #2                      ;   2   03    indicate M0
+  jsr SetObjectXPos           ;   6+  05    call subroutine to set M0 horizontal position (spans two scanlines)
+
   ; perform fine-tune horizontal offsets
   sta WSYNC;6-----------------;   3   06*   'carriage return' before HMOVE
   sta HMOVE                   ;   3   00    perform fine-tune offset
@@ -174,13 +180,13 @@ NextFrame:
   jsr GetScoreOffsets         ;   6   00    (spans a scanline)
   sta WSYNC;10----------------;   3   43
 
-  ; uses 11 scanlines
+  ; uses 14 scanlines
 
 ;--------------------------------------------------------
 ; VBLANK
 ;--------------------------------------------------------
 
-  ldx #26                     ;             (37 - 11 = 26 scanlines)
+  ldx #23                     ;             (37 - 14 = 23 scanlines)
 LoopVBlank:
   dex
   sta WSYNC;8,36--------------
