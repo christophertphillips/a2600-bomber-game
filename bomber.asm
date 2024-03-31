@@ -162,15 +162,15 @@ NextFrame:
   sta PF0                     ;   3   08    disable playfield
   sta PF1                     ;   3   11
   
-  sta CTRLPF                  ;   3   17    repeat playfield (since score/timer must be asymmetric)
+  sta CTRLPF                  ;   3   14    repeat playfield (since score/timer must be asymmetric)
   
-  sta COLUBK                  ;   3   20    set background to black
+  sta COLUBK                  ;   3   17    set background to black
 
-  lda #$1F                    ;   2   23    set playfield (digits) to yellow
-  sta COLUPF                  ;   3   25
+  lda #$1F                    ;   2   20    set playfield (digits) to yellow
+  sta COLUPF                  ;   3   22
 
   ; calculate score offsets
-  sta WSYNC;8-----------------;   3   28
+  sta WSYNC;8-----------------;   3   25
   jsr GetScoreOffsets         ;   6   00    (spans a scanline)
   sta WSYNC;10----------------;   3   43
 
