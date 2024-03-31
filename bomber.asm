@@ -151,17 +151,17 @@ NextFrame:
   jsr SetObjectXPos           ;   6+  05    call subroutine to set GRP1 horizontal position (spans two scanlines)
 
   ; set missile horizontal position
-  sta WSYNC;3-----------------;   3   06*
+  sta WSYNC;6-----------------;   3   06*
   lda MissileXPos             ;   3   00    load M0 position from RAM
   ldx #2                      ;   2   03    indicate M0
   jsr SetObjectXPos           ;   6+  05    call subroutine to set M0 horizontal position (spans two scanlines)
 
   ; perform fine-tune horizontal offsets
-  sta WSYNC;6-----------------;   3   06*   'carriage return' before HMOVE
+  sta WSYNC;9-----------------;   3   06*   'carriage return' before HMOVE
   sta HMOVE                   ;   3   00    perform fine-tune offset
 
   ; reset graphics, playfield, playfield reflection
-  sta WSYNC;7-----------------;   3   03
+  sta WSYNC;10----------------;   3   03
   lda #0                      ;   2   00
   sta GRP0                    ;   3   02    disable sprites
   sta GRP1                    ;   3   05 
@@ -176,9 +176,9 @@ NextFrame:
   sta COLUPF                  ;   3   22
 
   ; calculate score offsets
-  sta WSYNC;8-----------------;   3   25
+  sta WSYNC;11----------------;   3   25
   jsr GetScoreOffsets         ;   6   00    (spans a scanline)
-  sta WSYNC;10----------------;   3   43
+  sta WSYNC;13----------------;   3   43
 
   ; uses 14 scanlines
 
@@ -189,7 +189,7 @@ NextFrame:
   ldx #23                     ;             (37 - 14 = 23 scanlines)
 LoopVBlank:
   dex
-  sta WSYNC;8,36--------------
+  sta WSYNC;14,36-------------;
   bne LoopVBlank
 
   lda #$0
