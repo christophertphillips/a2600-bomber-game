@@ -288,19 +288,19 @@ ScoreBoardLoop:               ;                   add 20 scanlines space for sco
   SLEEP 3
 KernelLoop:
   ; draw jet sprite
-  txa                         ;   2   29          03
-  sec                         ;   2   31          05    
-  sbc JetYPos                 ;   3   33          07          subtract jet Y coord
-  cmp JET_HEIGHT              ;   3   36          10          compare to jet height
-  bcc DrawSpriteP0            ; 2/3   39          13          if result < jet height, draw with current index
-  lda #0                      ;   2   41          15          else, else, set index to 0
+  txa                         ;   2   03
+  sec                         ;   2   05
+  sbc JetYPos                 ;   3   07          subtract jet Y coord
+  cmp JET_HEIGHT              ;   3   10          compare to jet height
+  bcc DrawSpriteP0            ; 2/3   13          if result < jet height, draw with current index
+  lda #0                      ;   2   15          else, else, set index to 0
 DrawSpriteP0:
-  tay                         ;   2   43    42    17    16
-  lda (JetSpritePtr),Y        ;   5   45    44    19    18    load bitmap data of given jet sprite
-  sta GRP0                    ;   3   50    49    24    23    set player 0 line bitmap
-  lda (JetColorPtr),Y         ;   5   53    52    27    26    load color data of given jet sprite
-  sta COLUP0                  ;   3   58    57    32    31    set player 0 line color
-  sta WSYNC;51,227------------;   3   61    60    35    34
+  tay                         ;   2   17    16
+  lda (JetSpritePtr),Y        ;   5   19    18    load bitmap data of given jet sprite
+  sta GRP0                    ;   3   24    23    set player 0 line bitmap
+  lda (JetColorPtr),Y         ;   5   27    26    load color data of given jet sprite
+  sta COLUP0                  ;   3   32    31    set player 0 line color
+  sta WSYNC;53,227------------;   3   35    34
   
   ; draw bomber sprite
   txa                         ;   2   00
@@ -319,7 +319,7 @@ DrawSpriteP1:
   
   dex                         ;   2   32
   cpx #$ff                    ;   2   34          determine if end of screen has been reached
-  sta WSYNC;52,228------------;   3   36          (STA doesn't affect flags, so safe to use here)
+  sta WSYNC;54,228------------;   3   36          (STA doesn't affect flags, so safe to use here)
   bne KernelLoop              ; 2/3   00
 
 
