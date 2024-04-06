@@ -332,13 +332,12 @@ DrawSpriteP1:
   bne DrawMissile0            ; 2/3   33          if result = current scanline, activate missile
   lda #$02                    ;   2   35          else, don't activate missile
 DrawMissile0:
-  sta ENAM0                   ;   2   37    36    set missile
-
+  sta ENAM0                   ;   3   37    36    set missile
   
-  dex                         ;   2   28          decrement kernel scanline counter
-  cpx #$ff                    ;   2   30          determine if end of screen has been reached
-  sta WSYNC;54,228------------;   3   32          (STA doesn't affect flags, so safe to use here)
-  bne KernelLoop              ; 2/3   00
+  dex                         ;   2   40    39    decrement kernel scanline counter
+  cpx #$ff                    ;   2   42    41    determine if end of screen has been reached
+  sta WSYNC;54,228------------;   3   44    43    (STA doesn't affect flags, so safe to use here)
+  bne KernelLoop              ; 2/3   00    00
 
 
 
