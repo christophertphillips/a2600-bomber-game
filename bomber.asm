@@ -295,41 +295,41 @@ KernelLoop:
   bcc DrawSpriteP0            ; 2/3   13          if result < jet height, draw with current index
   lda #0                      ;   2   15          else, else, set index to 0
 DrawSpriteP0:
-  tay                         ;   2   17    16
-  lda (JetSpritePtr),Y        ;   5   19    18    load bitmap data of given jet sprite
-  pha
-  lda (JetColorPtr),Y         ;   5   27    26    load color data of given jet sprite
-  pha
+  tay                         ;   2   17          16
+  lda (JetSpritePtr),Y        ;   5   19          18    load bitmap data of given jet sprite
+  pha                         ;   3   24          23    push p0 color to stack
+  lda (JetColorPtr),Y         ;   5   27          26    load color data of given jet sprite
+  pha                         ;   3   32          31    push p0 bitmap to stack
   
   ; draw bomber sprite
-  txa                         ;   2   00
-  sec                         ;   2   02
-  sbc BomberYPos              ;   3   04          subtract bomber Y coord
-  cmp BOMBER_HEIGHT           ;   3   07          compare to bomber height
-  bcc DrawSpriteP1            ; 2/3   10          if result < bomber height, draw with current index
-  lda #0                      ;   2   12          else, else, set table index to 0
+  txa                         ;   2   35          34
+  sec                         ;   2   37          36
+  sbc BomberYPos              ;   3   39          38    subtract bomber Y coord
+  cmp BOMBER_HEIGHT           ;   3   42          41    compare to bomber height
+  bcc DrawSpriteP1            ; 2/3   45          44    if result < bomber height, draw with current index
+  lda #0                      ;   2   47          46    else, else, set table index to 0
 DrawSpriteP1:
-  tay                         ;   2   14    13
-  lda (BomberSpritePtr),Y     ;   5   16    15    load bitmap data of given bomber sprite
-  pha
-  lda (BomberColorPtr),Y      ;   5   24    23    load color data of given bomber sprite
-  pha
+  tay                         ;   2   49    48    48    47
+  lda (BomberSpritePtr),Y     ;   5   51    50    50    49    load bitmap data of given bomber sprite
+  pha                         ;   3   56    55    55    54
+  lda (BomberColorPtr),Y      ;   5   59    58    58    57    load color data of given bomber sprite
+  pha                         ;   3   64    63    63    62
 
-  sta WSYNC;53,227------------;
+  sta WSYNC;53,227------------;   3   67    66    66    65
 
-  pla
-  sta COLUP1
-  pla
-  sta GRP1
+  pla                         ;   4   00          pull p0 color from stack
+  sta COLUP1                  ;   3   04          set p0 color
+  pla                         ;   4   07          pull p0 bitmap from stack
+  sta GRP1                    ;   3   11          set p0 bitmap
 
-  pla
-  sta COLUP0
-  pla
-  sta GRP0
+  pla                         ;   4   14          pull p1 color from stack
+  sta COLUP0                  ;   3   18          set p1 color
+  pla                         ;   4   21          pull p1 bitmap from stack
+  sta GRP0                    ;   3   25          set p1 bitmap
   
-  dex                         ;   2   32
-  cpx #$ff                    ;   2   34          determine if end of screen has been reached
-  sta WSYNC;54,228------------;   3   36          (STA doesn't affect flags, so safe to use here)
+  dex                         ;   2   28          decrement kernel scanline counter
+  cpx #$ff                    ;   2   30          determine if end of screen has been reached
+  sta WSYNC;54,228------------;   3   32          (STA doesn't affect flags, so safe to use here)
   bne KernelLoop              ; 2/3   00
 
 
