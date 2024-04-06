@@ -282,7 +282,10 @@ ScoreBoardLoop:               ;                   add 20 scanlines space for sco
 
 
   ; draw gameplay area
-  ldx #88                     ;   2   27          (scanline 89)
+  ldx #87                     ;   2   27
+  sta WSYNC;51----------------;   3   29
+  sta WSYNC;52----------------;   3   00
+  SLEEP 3
 KernelLoop:
   ; draw jet sprite
   txa                         ;   2   29          03
@@ -338,7 +341,7 @@ CheckBomberYPosition:
   lda BomberYPos              ;   3   00
   cmp #247                    ;   2   03          check if bomber if fully off-screen
   bne SkipBomberReset         ; 2/3   05          if so, directly decrement its y-position
-  lda #89                     ;   2   07          else, reset its y-position at top of screen (accounting for scoreboard)
+  lda #87                     ;   2   07          else, reset its y-position at top of screen (accounting for scoreboard)
   sta BomberYPos              ;   3   09
   jsr LFSR                    ;   6   12          also, reset its x-position with a random value
   sta WSYNC;230(a)------------;   3   54*
@@ -380,7 +383,7 @@ CheckP0Up:                    ; check joy = up
   bit SWCHA                   ;   4   02
   bne CheckP0Down             ; 2/3   06          if joy != up, skip
   lda JetYPos                 ;   3   08          check if jet is at top of screen
-  cmp #80                     ;   2   11
+  cmp #79                     ;   2   11
   bpl CheckP0Down             ; 2/3   13          if yes, skip
   inc JetYPos                 ;   5   15          else, increment JetYPos
 
