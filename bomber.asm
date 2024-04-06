@@ -317,7 +317,7 @@ DrawSpriteP1:
 
   sta WSYNC;53,227------------;   3   67    66    66    65
 
-  pla                         ;   4   00          pull p0 color from stack
+  pla                         ;   4   00    00    00    00    pull p0 color from stack
   sta COLUP1                  ;   3   04          set p0 color
   pla                         ;   4   07          pull p0 bitmap from stack
   sta GRP1                    ;   3   11          set p0 bitmap
@@ -326,6 +326,14 @@ DrawSpriteP1:
   sta COLUP0                  ;   3   18          set p1 color
   pla                         ;   4   21          pull p1 bitmap from stack
   sta GRP0                    ;   3   25          set p1 bitmap
+
+  lda #$00                    ;   2   28
+  cpx MissileYPos             ;   3   30          compare current scanline to missile position
+  bne DrawMissile0            ; 2/3   33          if result = current scanline, activate missile
+  lda #$02                    ;   2   35          else, don't activate missile
+DrawMissile0:
+  sta ENAM0                   ;   2   37    36    set missile
+
   
   dex                         ;   2   28          decrement kernel scanline counter
   cpx #$ff                    ;   2   30          determine if end of screen has been reached
