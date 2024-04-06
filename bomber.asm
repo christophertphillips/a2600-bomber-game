@@ -298,11 +298,8 @@ DrawSpriteP0:
   tay                         ;   2   17    16
   lda (JetSpritePtr),Y        ;   5   19    18    load bitmap data of given jet sprite
   pha
-  sta GRP0                    ;   3   24    23    set player 0 line bitmap
   lda (JetColorPtr),Y         ;   5   27    26    load color data of given jet sprite
   pha
-  sta COLUP0                  ;   3   32    31    set player 0 line color
-  sta WSYNC;53,227------------;   3   35    34
   
   ; draw bomber sprite
   txa                         ;   2   00
@@ -315,16 +312,20 @@ DrawSpriteP1:
   tay                         ;   2   14    13
   lda (BomberSpritePtr),Y     ;   5   16    15    load bitmap data of given bomber sprite
   pha
-  sta GRP1                    ;   3   21    20    set player 1 line bitmap
   lda (BomberColorPtr),Y      ;   5   24    23    load color data of given bomber sprite
   pha
-  sta COLUP1                  ;   3   29    28    set player 1 line color
-  ;sta WSYNC
+
+  sta WSYNC;53,227------------;
 
   pla
+  sta COLUP1
   pla
+  sta GRP1
+
   pla
+  sta COLUP0
   pla
+  sta GRP0
   
   dex                         ;   2   32
   cpx #$ff                    ;   2   34          determine if end of screen has been reached
