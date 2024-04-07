@@ -186,21 +186,21 @@ NextFrame:
 ; VBLANK
 ;--------------------------------------------------------
 
-  ldx #23                     ;             (37 - 14 = 23 scanlines)
+  ldx #23                     ;   2   00          (37 - 14 = 23 scanlines)
 LoopVBlank:
-  dex
-  sta WSYNC;14,36-------------;
-  bne LoopVBlank
+  dex                         ;   2   02    03
+  sta WSYNC;14,36-------------;   3   04    05
+  bne LoopVBlank              ; 2/3   00    00
 
-  lda #$0
-  sta VBLANK        ; turn off VBLANK
+  lda #$0                     ;   2   02
+  sta VBLANK                  ;   3   04          turn off VBLANK
 
 ;--------------------------------------------------------
 ; Kernel
 ;--------------------------------------------------------
 
   ; draw scoreboard (scanline 95)
-  ldx #5
+  ldx #5                      ;   2   07
 ScoreBoardLoop:               ;                   add 20 scanlines space for scoreboard 
   ldy TensDigitOffset         ;   3   09    46    load the tens digit offset for the score
   lda Digits,Y                ;   4   12    49    load the digit bit pattern from the lookup table
