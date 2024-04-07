@@ -71,6 +71,9 @@ Start:
   lda #80                     ; set bomber X position
   sta BomberXPos
 
+  lda #88                     ; position missile immediate offscreen
+  sta MissileYPos
+
   lda #$84                    ; set background color
   sta BackgroundColor
 
