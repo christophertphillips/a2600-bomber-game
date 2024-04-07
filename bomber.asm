@@ -199,6 +199,11 @@ LoopVBlank:
 ; Kernel
 ;--------------------------------------------------------
 
+  jmp OnePageBoundary         ;   3   07          jump to one page
+  align $100                  ;                   align on one page boundary
+
+OnePageBoundary:
+
   ; draw scoreboard (scanline 95)
   ldx #5                      ;   2   07
 ScoreBoardLoop:               ;                   add 20 scanlines space for scoreboard 
