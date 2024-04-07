@@ -345,6 +345,11 @@ DrawMissile0:
   bne KernelLoop              ; 2/3   00    00
 
 
+  jmp TwoPageBoundary         ;   3   07          jump to one page
+  align $200                  ;                   align on one page boundary
+
+TwoPageBoundary:
+
 
 ;--------------------------------------------------------
 ; Overscan
