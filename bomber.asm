@@ -345,7 +345,7 @@ DrawMissile0:
   bne KernelLoop              ; 2/3   00    00
 
 
-  jmp TwoPageBoundary         ;   3   07          jump to one page
+  jmp TwoPageBoundary         ;   3   02          jump to one page
   align $200                  ;                   align on one page boundary
 
 TwoPageBoundary:
@@ -355,8 +355,8 @@ TwoPageBoundary:
 ; Overscan
 ;--------------------------------------------------------
 
-  lda #$02                    ;   2   02  turn on VBLANK
-  sta VBLANK                  ;   3   04
+  lda #$02                    ;   2   05  turn on VBLANK
+  sta VBLANK                  ;   3   07
 
 ;--------------------------------------------------------
 ; Housekeeping (in OVERSCAN)
@@ -364,7 +364,7 @@ TwoPageBoundary:
 
 ; update bomber position
 CheckBomberYPosition:
-  sta WSYNC;229---------------;   3   07
+  sta WSYNC;229---------------;   3   10
   lda BomberYPos              ;   3   00
   cmp #247                    ;   2   03          check if bomber if fully off-screen
   bne SkipBomberReset         ; 2/3   05          if so, directly decrement its y-position
