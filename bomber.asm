@@ -205,20 +205,20 @@ LoopVBlank:
 OnePageBoundary:
 
   ; draw scoreboard (scanline 95)
-  ldx #5                      ;   2   07
+  ldx #5                      ;   2   10
 ScoreBoardLoop:               ;                   add 20 scanlines space for scoreboard 
-  ldy TensDigitOffset         ;   3   09    46    load the tens digit offset for the score
-  lda Digits,Y                ;   4   12    49    load the digit bit pattern from the lookup table
-  and #$F0                    ;   2   16    53    remove the ones digit
-  sta ScoreSprite             ;   3   18    55    save the Score (tens) digit pattern into RAM
+  ldy TensDigitOffset         ;   3   12    46    load the tens digit offset for the score
+  lda Digits,Y                ;   4   15    49    load the digit bit pattern from the lookup table
+  and #$F0                    ;   2   19    53    remove the ones digit
+  sta ScoreSprite             ;   3   21    55    save the Score (tens) digit pattern into RAM
   
-  ldy OnesDigitOffset         ;   3   21    58    load the ones digit offset for the score
-  lda Digits,Y                ;   4   24    61    load the digit bit pattern from the lookup table
-  and #$0F                    ;   2   28    65    remove the tens digit
-  ora ScoreSprite             ;   3   30    67    merge it with the tens digit pattern in RAM
-  sta ScoreSprite             ;   3   33    70    save the Score (tens + ones) digit pattern into RAM
+  ldy OnesDigitOffset         ;   3   24    58    load the ones digit offset for the score
+  lda Digits,Y                ;   4   27    61    load the digit bit pattern from the lookup table
+  and #$0F                    ;   2   31    65    remove the tens digit
+  ora ScoreSprite             ;   3   33    67    merge it with the tens digit pattern in RAM
+  sta ScoreSprite             ;   3   36    70    save the Score (tens + ones) digit pattern into RAM
 
-  sta WSYNC;37,45-------------;   3   36    73    'carriage return' to give enough time to draw score to left side of screen
+  sta WSYNC;37,45-------------;   3   39    73    'carriage return' to give enough time to draw score to left side of screen
   
   sta PF1                     ;   3   00          draw score digits (first scanline)
 
